@@ -68,8 +68,16 @@ def dispatched(monkeypatch: pytest.MonkeyPatch) -> list[tuple[str, dict[str, Any
 
 
 def _returns(messages: list[ModelMessage]) -> list[str]:
+    """模型收到的**工具结果**。
+
+    🔴 必须排掉 `retry` 那几个：2.71 起工具重试不再用单独的 `RetryPromptPart`，
+    而是 `ToolReturnPart(retry=RetryInfo(...))`（`tool_manager._record_attempt`）。
+    不排的话假模型会把「参数校验失败、再来一次」当成「工具已经返回了」，
+    `test_bad_json_is_retried_not_fatal` 就会在读到时直接收尾 —— 断言成
+    「尝试 1 次」而不是 2 次，看起来像引擎不重试了（实测踩过：引擎的重试一直是好的）。
+    """
     last = messages[-1]
-    return [str(p.content) for p in last.parts if isinstance(p, ToolReturnPart)]
+    return [str(p.content) for p in last.parts if isinstance(p, ToolReturnPart) and getattr(p, 'retry', None) is None]
 
 
 def _run(engine: Any, *, ctx: RunContext | None = None) -> list[Any]:
