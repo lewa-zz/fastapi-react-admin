@@ -16,7 +16,9 @@ import {
   IconFileText,
   IconFileCheck,
   IconFlask,
+  IconFolder,
   IconGitCompare,
+  IconHeartHandshake,
   IconGauge,
   IconLayoutDashboard,
   IconLogin,
@@ -77,6 +79,12 @@ export const ICON_MAP: Record<string, IconCmp> = {
   'cuida:scope-outline': IconShieldLock,
   'devicon:redis': IconDatabaseCog,
   'eos-icons:admin': IconGauge,
+  // 顶层「项目管理」目录（WIR 台账挂在它下面）
+  'fe:folder': IconFolder,
+  // WIR 台账页。原来种子写的就是这个，但一直没登记 —— 侧边栏和页签都回落成圆点
+  'fe:book-open': IconBook,
+  // 顶层「客户关系」目录（CRM）
+  'mdi:handshake-outline': IconHeartHandshake,
   'fe:notice-push': IconBell,
   'fluent-mdl2:dictionary': IconBook,
   'icon-park-outline:permissions': IconShieldLock,

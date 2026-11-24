@@ -228,6 +228,7 @@ def parse_table(
     columns: list[TableColumn],
     *,
     sheet_name: str | None = None,
+    sheet_names: tuple[str, ...] | None = None,
     max_rows: int | None = None,
 ) -> TableData:
     """
@@ -236,6 +237,8 @@ def parse_table(
     :param raw: 文件原始字节（走 `read_table_upload` 拿到）
     :param columns: 列声明
     :param sheet_name: 指定按名字取工作表；不传则取**第一个**（见下面的注释）
+    :param sheet_names: 按顺序找这几个名字里的第一张；一个都不在时回落第一张。
+        业务系统导出的文件里数据可能不在第一张表上，而下载模板填完的文件通常只有一张
     :param max_rows: 数据行数上限，不传用 `TABLE_IMPORT_MAX_ROWS`
     :return:
     """
@@ -257,7 +260,7 @@ def parse_table(
         raise errors.RequestError(msg=t('error.table.corrupt')) from None
 
     try:
-        ws = _pick_sheet(wb, sheet_name)
+        ws = _pick_sheet(wb, sheet_name, sheet_names)
         rows_iter = ws.iter_rows()
 
         header_cells = next(rows_iter, None)
@@ -323,7 +326,7 @@ def parse_table(
         wb.close()
 
 
-def _pick_sheet(wb: Workbook, sheet_name: str | None) -> Any:
+def _pick_sheet(wb: Workbook, sheet_name: str | None, sheet_names: tuple[str, ...] | None = None) -> Any:
     """
     选工作表。
 
@@ -334,11 +337,18 @@ def _pick_sheet(wb: Workbook, sheet_name: str | None) -> Any:
     实测：一份第一个表叫「数据」、第二个表叫「临时草稿」的文件，保存时停在
     第二个页签，`wb.active.title` 就是「临时草稿」，读出来的是草稿里的内容。
     **解析成功、有数据、就是错的表**，而且没有任何一处会报错。
+
+    `sheet_names` 是「候选名单」：业务文件里数据可能叫 `WIR`，而下载模板填完的
+    文件只有一张 `数据` —— 按顺序找，一个都不在时回落第一张。
     """
     if sheet_name is not None:
         if sheet_name not in wb.sheetnames:
             raise errors.RequestError(msg=t('error.table.sheet_not_found', sheet=sheet_name))
         return wb[sheet_name]
+
+    for candidate in sheet_names or ():
+        if candidate in wb.sheetnames:
+            return wb[candidate]
 
     if not wb.worksheets:
         raise errors.RequestError(msg=t('error.table.empty'))

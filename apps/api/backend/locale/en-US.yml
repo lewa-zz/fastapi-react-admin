@@ -20,8 +20,8 @@ error:
     arg_not_found: 'Failed to build cache key: argument "{name}" does not exist'
     field_not_found: 'Failed to build cache key: field "{field}" does not exist on the object'
     invalidation_failed: Cache invalidation failed, data may be inconsistent
-    key_and_key_builder_conflict: '`key` and `key_builder` cannot be used together'
-    list_extraction_unsupported: 'Failed to build cache key: extracting a field from a list is not supported, use `key_builder` for list arguments'
+    key_and_key_builder_conflict: "`key` and `key_builder` cannot be used together"
+    list_extraction_unsupported: "Failed to build cache key: extracting a field from a list is not supported, use `key_builder` for list arguments"
   captcha:
     error: Captcha error
     invalid: Captcha is invalid, please try again
@@ -77,9 +77,9 @@ error:
     queue_unavailable: The background task queue is unavailable and this export could not be queued. Please try again later
     resource_unavailable: This kind of data cannot be exported right now (its feature may have been uninstalled)
     still_running: The export is still running and can be deleted once it finishes
-    storage_failed: 'Failed to save the export file: {reason}'
+    storage_failed: "Failed to save the export file: {reason}"
     timeout: The export did not finish in time and was stopped. Try again or narrow the filters
-    too_many_rows: '{total} rows match, which exceeds the per-export limit of {limit}. Narrow the filters and try again'
+    too_many_rows: "{total} rows match, which exceeds the per-export limit of {limit}. Narrow the filters and try again"
     too_many_running: You already have {limit} exports in progress. Wait for them to finish before starting another
     unexpected: Something unexpected went wrong during the export. See the server log for details
     user_unavailable: The account that started this export is disabled or no longer exists, so it was cancelled
@@ -91,10 +91,10 @@ error:
     not_found: File does not exist
     part_out_of_range: Part number out of range ({total} parts in total)
     part_size_mismatch: Part {part} has the wrong size, expected {expected} bytes
-    parts_missing: '{n} parts have not been uploaded yet'
+    parts_missing: "{n} parts have not been uploaded yet"
     public_link_images_only: Public direct links only support images, use regular upload for other file types
-    size_exceeded: '{label} exceeds the size limit of {size_mb} MB, please choose another one'
-    size_mismatch: 'File size mismatch: expected {expected} bytes, received {actual}'
+    size_exceeded: "{label} exceeds the size limit of {size_mb} MB, please choose another one"
+    size_mismatch: "File size mismatch: expected {expected} bytes, received {actual}"
     some_not_found: Some files do not exist
     unknown_type: Unknown file type
     unsupported_format: File format {file_ext} is not supported
@@ -102,7 +102,7 @@ error:
     upload_finalizing: The upload is being finalized, please wait
     upload_session_not_found: Upload session not found or expired, please upload again
   import:
-    bad_choice: '{column}: must be one of {allowed}'
+    bad_choice: "{column}: must be one of {allowed}"
     bad_email: Not a valid email address
     bad_format: Invalid format; see the Instructions sheet of the template
     default_password_unset: No import default password is configured (USER_IMPORT_DEFAULT_PASSWORD), bulk import is off
@@ -116,9 +116,9 @@ error:
     key_not_found: '{key} does not exist (mode is "update only")'
     leader_not_found: Leader {username} does not exist or is disabled
     mode_unsupported: This kind of data does not support that import mode
-    not_an_integer: '{column}: must be a whole number'
+    not_an_integer: "{column}: must be a whole number"
     nothing_to_commit: There are no rows to import. Check the excluded rows
-    parent_cycle: 'Parent departments form a cycle: {codes}'
+    parent_cycle: "Parent departments form a cycle: {codes}"
     parent_not_found: Parent department {code} does not exist, or you are not allowed to add departments under it
     parent_row_failed: Parent department {code} was not imported
     parent_row_invalid: The row for parent department {code} has problems, so this row cannot be imported either
@@ -148,10 +148,19 @@ error:
   notice:
     not_found: Notice does not exist
     attachment_invalid: The attachment does not exist, or you are not allowed to use that file
-    attachment_public: "\"{name}\" is a public file (downloadable without signing in) and cannot be attached to a notice; upload it again"
-    require_ack_needs_popup: "\"Require acknowledgement\" only works together with \"Pop up after sign-in\""
+    attachment_public: '"{name}" is a public file (downloadable without signing in) and cannot be attached to a notice; upload it again'
+    require_ack_needs_popup: '"Require acknowledgement" only works together with "Pop up after sign-in"'
     public_with_audience: A notice shown on the sign-in page cannot be limited to an audience (anyone can see it without signing in)
     audience_invalid: The audience contains a department, role or user that does not exist
+  wir:
+    type_exists: 'WIR type "{type_cn}" already exists'
+    type_not_found: 'WIR type ID={pk} does not exist'
+    type_in_use: 'WIR type "{type_cn}" still has {count} WIR record(s) and cannot be deleted'
+    record_not_found: 'WIR record ID={pk} does not exist'
+    tml_no_exists: 'TML number "{tml_no}" already exists'
+    import_row_key_missing: This row has neither an ID nor a TML number, so we cannot tell whether it was already imported
+    import_type_unknown: 'WIR type "{value}" does not exist; import the WIR types first'
+    type_source_id_conflict: 'Type ID={source_id} is already used by "{type_cn}"; use another ID or leave it blank'
   notification:
     not_found: Notification does not exist
     delivery_not_found: Delivery record does not exist
@@ -175,10 +184,10 @@ error:
     account_bound_to_other: This {source} account is already bound to another user
     account_not_bound: This account is not bound to {source}
     auto_register_disabled: This {source} account is not linked to any user yet. Sign in with your password first, then link it in your profile
-    auto_register_role_missing: 'The default role for auto-registered accounts is not configured or not available ({role}). Please contact the administrator'
+    auto_register_role_missing: "The default role for auto-registered accounts is not configured or not available ({role}). Please contact the administrator"
     binding_unsupported: Binding {source} is not supported yet
-    illegal_state_operation: 'Illegal operation: invalid OAuth2 state'
-    social_login_unsupported: '{social} OAuth2 sign-in is not supported yet'
+    illegal_state_operation: "Illegal operation: invalid OAuth2 state"
+    social_login_unsupported: "{social} OAuth2 sign-in is not supported yet"
     state_already_claimed: This authorization link has already been used. Please start again from the page
     state_invalid: Invalid OAuth2 state
     state_invalid_or_missing: OAuth2 state is invalid or missing
@@ -193,23 +202,23 @@ error:
     code_exists: Application code {code} already exists
     invalid_key: Invalid accessKey
     ip_denied: Source IP {ip} is not in this application's whitelist
-    missing_param: 'Missing signature headers: {headers_missing}'
+    missing_param: "Missing signature headers: {headers_missing}"
     nonce_reused: Nonce has already been used, possible replay
     rate_limited: Too many requests, please try again later
     request_failed: Request failed
     scope_denied: This application is not authorized to call this API ({scope})
-    scope_unknown: 'These APIs do not exist: {scopes}'
+    scope_unknown: "These APIs do not exist: {scopes}"
     secret_key_invalid: OPEN_SECRET_KEY is not a valid hex key (32 bytes / 64 hex characters)
     secret_key_missing: OPEN_SECRET_KEY is not configured, the Secret Key cannot be stored safely. Generate one with python -c "import os;print(os.urandom(32).hex())", put it in .env and restart
     sign_mismatch: Signature mismatch, compare line by line against the returned string_to_sign
     timestamp_expired: Timestamp is outside the allowed window (±{window} seconds), please sync the server clock
     webhook_delivery_not_found: Delivery not found
     webhook_delivery_not_resendable: Only failed or abandoned deliveries can be resent
-    webhook_events_unknown: 'These events do not exist: {events}'
+    webhook_events_unknown: "These events do not exist: {events}"
     webhook_limit: An app can have at most {max} webhook endpoints
     webhook_not_found: Webhook endpoint not found
     webhook_scope_missing: 'Grant the app "{scopes}" before subscribing to: {events}'
-    webhook_url_invalid: 'Webhook URL is not usable: {reason}'
+    webhook_url_invalid: "Webhook URL is not usable: {reason}"
   password:
     max_length: Password must be at most {max_length} characters
     min_length: Password must be at least {min_length} characters
@@ -248,8 +257,8 @@ error:
   rbac:
     casbin_import_failed: Failed to import Casbin RBAC plugin, please contact the administrator
   request:
-    debug_input_suffix: ', input: {input}'
-    invalid_parameter: 'Invalid request parameter: {message}'
+    debug_input_suffix: ", input: {input}"
+    invalid_parameter: "Invalid request parameter: {message}"
     json_invalid: Failed to parse JSON
   role:
     already_exists: Role already exists
@@ -269,15 +278,15 @@ error:
     replaced: Your account signed in on another device, so this device was signed out
     reuse: "Your sign-in credentials were used more than once, so you were signed out; change your password if this wasn't you"
   snowflake:
-    clock_moved_backwards: 'Snowflake ID generation failed: clock moved backwards by more than {ms} ms, contact the administrator immediately'
+    clock_moved_backwards: "Snowflake ID generation failed: clock moved backwards by more than {ms} ms, contact the administrator immediately"
     config_failed: Invalid snowflake configuration, please contact the administrator
     datacenter_config_failed: Invalid snowflake datacenter id, please contact the administrator
-    generation_failed: 'Snowflake ID generation failed: the generator is not initialised'
-    lease_lost: 'Snowflake ID generation failed: this process no longer holds its snowflake node lease (heartbeat not renewed, or the node was taken by another process), please contact the administrator'
+    generation_failed: "Snowflake ID generation failed: the generator is not initialised"
+    lease_lost: "Snowflake ID generation failed: this process no longer holds its snowflake node lease (heartbeat not renewed, or the node was taken by another process), please contact the administrator"
     no_node_available: No snowflake node available, all nodes are exhausted
     worker_config_failed: Invalid snowflake worker id, please contact the administrator
   sql:
-    illegal_operation: 'SQL script {filepath} contains an illegal operation, only allowed: {allowed}'
+    illegal_operation: "SQL script {filepath} contains an illegal operation, only allowed: {allowed}"
     script_not_found: SQL script file does not exist
   sms:
     circuit_open: SMS sending has hit the site-wide hourly limit and is paused for now; please contact the administrator
@@ -340,7 +349,7 @@ error:
     corrupt: The file is corrupted or not a valid xlsx, re-save it with Excel and try again
     empty: The spreadsheet contains no data
     header_duplicated: Column {column} appears more than once in the header row
-    header_missing: 'The header row is missing required columns: {columns}'
+    header_missing: "The header row is missing required columns: {columns}"
     not_xlsx: Only xlsx is supported, got {file_ext}
     sheet_not_found: No worksheet named {sheet}
     size_exceeded: The spreadsheet exceeds the {size_mb} MB limit
@@ -348,7 +357,7 @@ error:
     too_many_rows: At most {max_rows} rows per import, please split the file
   task:
     deadline_conflict: Only one of deadline and countdown seconds can be set
-    not_registered: 'Task {task} is not registered; available: {available}'
+    not_registered: "Task {task} is not registered; available: {available}"
     result_not_found: Task result not found
     scheduler_name_exists: Task scheduler name already exists
     scheduler_not_found: Task scheduler not found
@@ -364,7 +373,7 @@ error:
     password_mismatch: The two passwords do not match
     password_required: Password cannot be empty
     permission_type_not_found: Permission type does not exist
-    preference_too_many: 'You can store at most {limit} personal preferences'
+    preference_too_many: "You can store at most {limit} personal preferences"
     self_permission_forbidden: You cannot change your own permissions
     self_delete_forbidden: You cannot delete your current account
     superuser_delete_forbidden: A superuser cannot be deleted directly. Ask another superuser to remove their superuser privileges first
@@ -372,22 +381,22 @@ error:
     username_registered: Username is already registered
     wrong_old_password: Current password is incorrect
   workflow:
-    progress_page_too_large: 'With progress, a page holds at most {max} rows'
+    progress_page_too_large: "With progress, a page holds at most {max} rows"
     ai_fill_nothing: There are no fields on this form that the AI can fill in
     ai_fill_no_material: Paste some text or upload a file first
     ai_fill_bad_output: The model's reply was not in the agreed format
     ai_fill_empty: The model returned nothing
     ai_fill_empty_image: The model returned nothing. The material is an image and the current model may not be able to read images; try one that can (such as a VL model)
-    ai_fill_failed: 'The AI could not fill in the form, so nothing was changed. Reason: {reason}'
+    ai_fill_failed: "The AI could not fill in the form, so nothing was changed. Reason: {reason}"
     ai_fill_file_too_large: The file is too large (10 MB max)
     ai_no_plugin: The AI assistant plugin is not installed
     ai_no_provider: 'No model provider is available. Add one under "AI assistant → Models" first'
     ai_model_timeout: The model took too long to respond
-    ai_design_failed: 'The AI could not produce a usable workflow, so your design is unchanged. Reason: {reason}'
+    ai_design_failed: "The AI could not produce a usable workflow, so your design is unchanged. Reason: {reason}"
     attachment_not_yours: You can only attach files you uploaded yourself
     instance_not_found: Approval not found
     instance_finished: This approval has already ended
-    action_disabled: 'This action is not available right now: {reason}'
+    action_disabled: "This action is not available right now: {reason}"
     action_not_allowed: You can't perform this action now, please refresh
     remind_too_often: You can only send a reminder once every 5 minutes
     idempotency_key_invalid: Invalid idempotency key
@@ -398,9 +407,9 @@ error:
     definition_has_instances: This workflow already has approvals and cannot be deleted; disable it instead
     definition_never_published: Not published yet, cannot be enabled
     definition_too_large: Form or flow configuration is too large
-    biz_type_unknown: 'Unknown business type: {biz_type}'
+    biz_type_unknown: "Unknown business type: {biz_type}"
     not_form_definition: This workflow is not a form approval; start it from the business page
-    form_invalid: 'Invalid form data: {detail}'
+    form_invalid: "Invalid form data: {detail}"
     selected_invalid: Invalid approver selection
     selected_required: 'Please choose approvers for "{node}"'
     opinion_required: Please enter a comment when rejecting
@@ -409,13 +418,15 @@ error:
     user_not_found: The selected user does not exist or is disabled
     transfer_to_initiator: Cannot transfer to the initiator
     transfer_to_existing: That person is already an approver of this step
-    field_not_editable: 'These fields cannot be edited at this step: {fields}'
+    field_not_editable: "These fields cannot be edited at this step: {fields}"
     send_back_target_invalid: Cannot send back to this step. Refresh and choose again
     task_not_pending: This task has already been handled. Refresh to see the latest
     handover_same_user: The person handing over and the person taking over must be different
     sign_mode_invalid: Choose whether to add them before or after you
     sign_users_invalid: Choose 1 to 10 people to add
     draft_too_large: The draft is too large to save
+  customer:
+    not_found: Customer does not exist
 
 file_type:
   archive: Archive
@@ -432,10 +443,10 @@ file_type:
 export:
   # Headers, values and the "Export info" sheet of exported files (`common/dataio/` + `app/admin/dataio.py`).
   # Keys must match zh-CN one to one: background exports render in the requester's language
-  bool_no: 'No'
-  bool_yes: 'Yes'
-  cell_truncated: '… (truncated: cells hold at most 32,767 characters)'
-  list_separator: ', '
+  bool_no: "No"
+  bool_yes: "Yes"
+  cell_truncated: "… (truncated: cells hold at most 32,767 characters)"
+  list_separator: ", "
   column:
     action: Action
     browser: Browser
@@ -497,6 +508,24 @@ export:
     user_id: User ID
     user_uuid: User UUID
     username: Username
+    wir_another_desc: Alias
+    wir_cb_inspection: C&B inspection date
+    wir_comment: Consultant comment
+    wir_dc: DC
+    wir_description: Description
+    wir_discipline: Discipline
+    wir_doc_status: Document status
+    wir_doc_type: Document type
+    wir_drt_submitted: DRT submitted
+    wir_filepath: Signed file path
+    wir_from_party: From
+    wir_pmweb_no: PMWeb No.
+    wir_pmx_submitted: PMX submitted
+    wir_source_id: Source ID
+    wir_tml_no: TML No.
+    wir_type: Type
+    wir_type_cn: Type (Chinese)
+    wir_type_en: Type (English)
   filter:
     dept: Department ID
     dict_type: Dictionary type ID
@@ -516,9 +545,9 @@ export:
     timezone_note: Times
     timezone_value: All times in this file are shown in {tz}
   notify:
-    done_content: '{rows} rows ({file}). Download it from Profile → Exports. The file is deleted automatically after its retention period.'
-    done_title: 'Export ready: {title}'
-    failed_title: 'Export failed: {title}'
+    done_content: "{rows} rows ({file}). Download it from Profile → Exports. The file is deleted automatically after its retention period."
+    done_title: "Export ready: {title}"
+    failed_title: "Export failed: {title}"
   resource:
     data_change: Data changes
     dept: Departments
@@ -527,9 +556,11 @@ export:
     notice: Announcements
     opera_log: Operation logs
     user: Users
+    wir_record: WIR ledger
+    wir_type: WIR types
   value:
     announcement: Announcement
-    change_bulk_rows: '{n} rows'
+    change_bulk_rows: "{n} rows"
     change_empty: empty
     change_secret: changed (value not recorded)
     change_varies: differs per row
@@ -548,8 +579,8 @@ export:
 import:
   # Import templates, error reports and the instructions sheet (`common/dataio/importing.py` + `app/admin/service/import_service.py`).
   # Keys must match zh-CN one to one: templates and reports render in the current language
-  cell_error: '{column}: {msg}'
-  error_separator: '; '
+  cell_error: "{column}: {msg}"
+  error_separator: "; "
   note:
     dept_code: Required. The department code (not its name), e.g. HQ
     dept_code_key: Required and globally unique; decides between create and update (2–32 characters, starts with an uppercase letter, uppercase letters, digits and underscores only)
@@ -566,6 +597,10 @@ import:
     update_keeps_blank: When updating existing data, a blank cell keeps the current value instead of clearing it
     user_default_password: Imported accounts all use the system default password. Ask each person to change it soon
     username: Required. Must be globally unique
+    wir_record_source_id: 'Optional but strongly recommended: the original row ID, used to tell whether this row was already imported'
+    wir_record_type: Type ID (import types first) or the type's Chinese / English name
+    wir_type_first: Import the type sheet first, then the WIR records; the record type is matched by type ID or name
+    wir_type_source_id: Optional. The original ID from the type sheet (1..36). Keeping it lets the record sheet's type_id match directly
   readme:
     column: Column
     data_sheet: Data
@@ -576,10 +611,10 @@ import:
     sheet: Instructions
   report:
     errors: Errors
-    file_name: '{resource} import errors_{stamp}.xlsx'
+    file_name: "{resource} import errors_{stamp}.xlsx"
     row_no: Original row
     sheet: Errors
-  template_name: '{resource} import template.xlsx'
+  template_name: "{resource} import template.xlsx"
 
 response:
   error: Request error
@@ -612,11 +647,11 @@ notification:
     test_content: Group bot "{name}" is set up. Notifications it subscribes to will be pushed to this group.
 open:
   webhook:
-    disabled_title: 'Webhook endpoint disabled: {name}'
+    disabled_title: "Webhook endpoint disabled: {name}"
     disabled_auto: 'Endpoint {url} of app "{app}" failed {n} times in a row for over 24 hours and was disabled. Fix it, re-enable it, then bulk-resend from the delivery log'
     disabled_gone: 'Endpoint {url} of app "{app}" answered 410 Gone and was disabled. Check the URL and re-enable it'
 workflow:
-  default_title: '{name} from {user}'
+  default_title: "{name} from {user}"
   no_assignee: No approver found, skipped automatically
   no_assignee_reject: 'No approver found for "{node}", rejected automatically'
   status:
@@ -626,21 +661,21 @@ workflow:
     withdrawn: Withdrawn
     terminated: Terminated
   notify:
-    cc_title: 'CC: {title}'
-    assigned_title: 'New task: {title}'
-    remind_title: 'Reminder: {title}'
-    remind_content: '{user} asked you to handle this approval soon'
-    withdrawn_title: 'Withdrawn: {title}'
-    sent_back_title: 'Sent back: {title}'
-    sent_back_content: '{user} sent your request back: {opinion}. Edit it and submit again'
-    timeout_title: 'Overdue: {title}'
-    timeout_content: 'This approval has been waiting on you for over {hours} hours. Please handle it soon'
+    cc_title: "CC: {title}"
+    assigned_title: "New task: {title}"
+    remind_title: "Reminder: {title}"
+    remind_content: "{user} asked you to handle this approval soon"
+    withdrawn_title: "Withdrawn: {title}"
+    sent_back_title: "Sent back: {title}"
+    sent_back_content: "{user} sent your request back: {opinion}. Edit it and submit again"
+    timeout_title: "Overdue: {title}"
+    timeout_content: "This approval has been waiting on you for over {hours} hours. Please handle it soon"
   initiator: Initiator
   resubmit_node: Initiator revision
   handover_opinion: Handover
-  timeout_approved: 'Not handled within {hours} hours; approved automatically'
-  ai_approved: 'The AI pre-review suggested approval. Of the {n} requests on this workflow it suggested approving, people finally approved {rate}, so this step was approved automatically'
-  timeout_rejected: 'Not handled within {hours} hours; rejected automatically'
+  timeout_approved: "Not handled within {hours} hours; approved automatically"
+  ai_approved: "The AI pre-review suggested approval. Of the {n} requests on this workflow it suggested approving, people finally approved {rate}, so this step was approved automatically"
+  timeout_rejected: "Not handled within {hours} hours; rejected automatically"
   ai_fill:
     skip_calc: Calculated automatically, no need to fill in
     skip_pick: People and departments must be picked by you
@@ -657,7 +692,7 @@ workflow:
     attachment_timeout: Reading the attachments took too long, so this pre-review was discarded
 storage:
   builtin_name: Local storage (built-in)
-  probe_ok: 'Connection OK: write, read back and delete all succeeded'
+  probe_ok: "Connection OK: write, read back and delete all succeeded"
 # 会话所属的端（#138），拼进 error.session.limit_reached
 session:
   client:

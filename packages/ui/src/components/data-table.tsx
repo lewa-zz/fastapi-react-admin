@@ -98,6 +98,31 @@ export const ACTIONS_COLUMN_ID = "actions"
 export const ACTIONS_CELL_CLASS = "w-px text-end"
 
 /**
+ * 宽表把操作列**钉在右边**（`DataTable` 的 `stickyActions`）。
+ *
+ * 🔴 列多到横向滚动时，`…` 会跟着内容一起滚出视口，表现是「这一页没有编辑 / 删除」，
+ * 而代码、权限、接口全都是对的。实测 WIR 台账（修列宽之前，1600px 视口）：
+ * 表格 1563px、容器 1310px，操作列落在 **x=1792** —— 视口外。
+ * 列宽收窄之后那张表的最小宽度仍有约 990px，1280 以下的窗口照样滚。
+ *
+ * 🔴 背景**必须是不透明且和行同色**的两个常量，否则横滚时看得出来：
+ * - 表头跟 `thead` 的 `bg-muted`
+ * - 表体默认 `bg-background`；悬停 / 选中由 `tr` 上的 `group/row` 带过来。
+ *   悬停底色 `bg-muted/50` 带 50% alpha —— 直接搬过来会变成**半透明**，
+ *   滚到下面的单元格会从这格里透出来（实测 `oklab(0.97 0 0 / 0.5)`）。
+ *   所以用 `color-mix` 把它和底色**先合成成不透明色**，肉眼看和相邻单元格完全一样。
+ */
+const STICKY_ACTIONS_HEAD =
+  "sticky right-0 z-20 bg-muted shadow-[inset_1px_0_0_var(--border)]"
+// ⚠️ 这两条类名必须**整串写在这里** —— 用模板串拼出来的类 Tailwind 扫不到，
+// 结果就是「类在 DOM 里、CSS 规则不存在」，悬停底色静默失效
+const STICKY_ACTIONS_CELL = cn(
+  "sticky right-0 z-[1] bg-background shadow-[inset_1px_0_0_var(--border)]",
+  "group-hover/row:bg-[color-mix(in_oklab,var(--muted)_50%,var(--background))]",
+  "group-data-[state=selected]/row:bg-muted"
+)
+
+/**
  * 「列」：显隐 + 顺序（#11）。
  *
  * 顺序要调用方在 `tableFeatures()` 里注册 `columnOrderingFeature`；没注册的表只有显隐，
@@ -488,6 +513,13 @@ export interface DataTableProps<
   columnLabels?: ColumnLabelMap
   /** When true the column-visibility dropdown is shown in the toolbar's right side. Default: true */
   showColumnVisibility?: boolean
+  /**
+   * 把操作列（`ACTIONS_COLUMN_ID`）钉在表格右缘，横向滚动时始终可见。
+   *
+   * 列数多到需要横向滚动的表才打开它 —— 否则用户滚到右边才发现行操作，
+   * 或者压根不知道有。窄表开了也看不出区别（本来就不滚）。
+   */
+  stickyActions?: boolean
   /** Extra classes for the table body (e.g. per-column sizing for drag handles). */
   tableBodyClassName?: string
   /**
@@ -531,6 +563,7 @@ export function DataTable<
   pagination,
   columnLabels,
   showColumnVisibility = true,
+  stickyActions = false,
   tableBodyClassName,
   loading = false,
   skeletonRows = 6,
@@ -596,7 +629,12 @@ export function DataTable<
                   <TableHead
                     key={header.id}
                     colSpan={header.colSpan}
-                    className={header.column.id === ACTIONS_COLUMN_ID ? ACTIONS_CELL_CLASS : undefined}
+                    className={cn(
+                      header.column.id === ACTIONS_COLUMN_ID && ACTIONS_CELL_CLASS,
+                      stickyActions &&
+                        header.column.id === ACTIONS_COLUMN_ID &&
+                        STICKY_ACTIONS_HEAD
+                    )}
                   >
                     {header.isPlaceholder ? null : (
                       <FlexRender header={header} />
@@ -632,7 +670,12 @@ export function DataTable<
                     {(row as AnyRow).getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
-                        className={cell.column.id === ACTIONS_COLUMN_ID ? ACTIONS_CELL_CLASS : undefined}
+                        className={cn(
+                          cell.column.id === ACTIONS_COLUMN_ID && ACTIONS_CELL_CLASS,
+                          stickyActions &&
+                            cell.column.id === ACTIONS_COLUMN_ID &&
+                            STICKY_ACTIONS_CELL
+                        )}
                       >
                         <FlexRender cell={cell} />
                       </TableCell>

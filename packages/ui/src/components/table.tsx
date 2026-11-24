@@ -61,8 +61,11 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   return (
     <tr
       data-slot="table-row"
+      /* `group/row` 只服务「钉住的列」（`data-table.tsx` 的 `stickyActions`）：
+         单元格要吃行自己的悬停 / 选中底色，否则它会是一块跟行不同色的补丁。
+         用具名 group 不用裸 `group`，免得和别的 `group-hover:` 互相串台。 */
       className={cn(
-        "border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted",
+        "group/row border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted",
         className
       )}
       {...props}

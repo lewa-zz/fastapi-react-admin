@@ -207,7 +207,14 @@ class ImportService:
         # 解析放线程里：openpyxl 读一份接近上限的表是几百毫秒的纯 CPU，放事件循环上就是所有人的请求一起停
         # （同批量建号那条，admin 分册）。线程里的 `t()` 照样按这个请求的语言 —— anyio 会把 contextvars 带过去
         table_columns = _table_columns(spec)
-        data = await anyio.to_thread.run_sync(lambda: parse_table(raw, table_columns, max_rows=spec.max_rows))
+        data = await anyio.to_thread.run_sync(
+            lambda: parse_table(
+                raw,
+                table_columns,
+                sheet_names=spec.sheet_names or None,
+                max_rows=spec.max_rows,
+            )
+        )
         labels = {column.key: t(column.label) for column in spec.columns}
         lookups = {column.key: _choice_lookup(column) for column in spec.columns if column.choices}
 

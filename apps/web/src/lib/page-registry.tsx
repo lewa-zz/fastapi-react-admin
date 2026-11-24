@@ -41,6 +41,8 @@ import { OpenLogPage } from "@admin/platform/pages/open-log"
 import { WorkflowInboxPage } from "@admin/platform/pages/workflow-inbox"
 import { WorkflowDefinitionPage } from "@admin/platform/pages/workflow-definition"
 import { WorkflowMonitorPage } from "@admin/platform/pages/workflow-monitor"
+import { CustomerPage } from "@admin/platform/pages/customer"
+import { WirPage } from "@admin/platform/pages/wir"
 
 /**
  * routeId → 页面组件。
@@ -93,4 +95,6 @@ export const pageRegistry: PageRegistry = {
   "/_auth/workflow/definition": WorkflowDefinitionPage,
   "/_auth/workflow/monitor": WorkflowMonitorPage,
   "/_auth/system/plugin": PluginPage,
+  "/_auth/crm/customer": CustomerPage,
+  "/_auth/project/wir": WirPage,
 }

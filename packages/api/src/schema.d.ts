@@ -2346,6 +2346,181 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/sys/wir/types/import/template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 下载 WIR 类型导入模板 */
+        get: operations["download_wir_type_import_template_api_v1_sys_wir_types_import_template_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sys/wir/types/import/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 预览 WIR 类型导入 */
+        post: operations["preview_wir_type_import_api_v1_sys_wir_types_import_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sys/wir/types/import/commit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 提交 WIR 类型导入 */
+        post: operations["commit_wir_type_import_api_v1_sys_wir_types_import_commit_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sys/wir/import/template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 下载 WIR 记录导入模板 */
+        get: operations["download_wir_import_template_api_v1_sys_wir_import_template_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sys/wir/import/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 预览 WIR 记录导入 */
+        post: operations["preview_wir_import_api_v1_sys_wir_import_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sys/wir/import/commit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** 提交 WIR 记录导入 */
+        post: operations["commit_wir_import_api_v1_sys_wir_import_commit_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sys/wir/types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 获取所有 WIR 类型 */
+        get: operations["get_wir_types_api_v1_sys_wir_types_get"];
+        put?: never;
+        /** 创建 WIR 类型 */
+        post: operations["create_wir_type_api_v1_sys_wir_types_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sys/wir/types/{pk}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** 更新 WIR 类型 */
+        put: operations["update_wir_type_api_v1_sys_wir_types__pk__put"];
+        post?: never;
+        /** 删除 WIR 类型 */
+        delete: operations["delete_wir_type_api_v1_sys_wir_types__pk__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sys/wir": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 分页获取 WIR 台账记录 */
+        get: operations["get_wir_records_api_v1_sys_wir_get"];
+        put?: never;
+        /** 创建 WIR 台账记录 */
+        post: operations["create_wir_record_api_v1_sys_wir_post"];
+        /** 批量删除 WIR 台账记录 */
+        delete: operations["delete_wir_records_api_v1_sys_wir_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sys/wir/{pk}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 获取单条 WIR 记录详情 */
+        get: operations["get_wir_record_api_v1_sys_wir__pk__get"];
+        /** 更新 WIR 台账记录 */
+        put: operations["update_wir_record_api_v1_sys_wir__pk__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/sys/workflow/startable": {
         parameters: {
             query?: never;
@@ -3304,6 +3479,43 @@ export interface paths {
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/crm/customers/{pk}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 获取客户详情 */
+        get: operations["get_customer_api_v1_crm_customers__pk__get"];
+        /** 更新客户 */
+        put: operations["update_customer_api_v1_crm_customers__pk__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/crm/customers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** 分页获取客户 */
+        get: operations["get_customers_paginated_api_v1_crm_customers_get"];
+        put?: never;
+        /** 创建客户 */
+        post: operations["create_customer_api_v1_crm_customers_post"];
+        /** 批量删除客户 */
+        delete: operations["delete_customers_api_v1_crm_customers_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -4431,6 +4643,22 @@ export interface components {
              */
             file: string;
         };
+        /** Body_preview_wir_import_api_v1_sys_wir_import_preview_post */
+        Body_preview_wir_import_api_v1_sys_wir_import_preview_post: {
+            /**
+             * File
+             * @description xlsx 文件
+             */
+            file: string;
+        };
+        /** Body_preview_wir_type_import_api_v1_sys_wir_types_import_preview_post */
+        Body_preview_wir_type_import_api_v1_sys_wir_types_import_preview_post: {
+            /**
+             * File
+             * @description xlsx 文件
+             */
+            file: string;
+        };
         /** Body_reset_user_password_api_v1_sys_users__pk__password_put */
         Body_reset_user_password_api_v1_sys_users__pk__password_put: {
             /**
@@ -4866,6 +5094,48 @@ export interface components {
              * @description 指定供应商；不传则用默认供应商
              */
             provider_id?: string | number | null;
+        };
+        /**
+         * CreateCustomerParam
+         * @description 创建客户参数
+         */
+        CreateCustomerParam: {
+            /**
+             * Name
+             * @description 客户名称
+             */
+            name: string;
+            /**
+             * Phone
+             * @description 联系电话
+             */
+            phone?: string | null;
+            /**
+             * Level
+             * @description 客户等级（0：普通、1：重要、2：VIP）
+             * @default 0
+             */
+            level: number;
+            /**
+             * @description 状态（0：停用、1：正常）
+             * @default 1
+             */
+            status: components["schemas"]["StatusType"];
+            /**
+             * Remark
+             * @description 备注
+             */
+            remark?: string | null;
+            /**
+             * Dept Id
+             * @description 所属部门 ID（不传 = 创建人的部门）
+             */
+            dept_id?: number | null;
+            /**
+             * Owner Id
+             * @description 负责人用户 ID（不传 = 创建人）
+             */
+            owner_id?: number | null;
         };
         /**
          * CreateDataRuleParam
@@ -5572,6 +5842,97 @@ export interface components {
              */
             app_id: number;
         };
+        /** CreateWirRecordParam */
+        CreateWirRecordParam: {
+            /**
+             * From Party
+             * @description 提交方
+             */
+            from_party?: string | null;
+            /**
+             * Tml No
+             * @description TML 申请编号
+             */
+            tml_no?: string | null;
+            /**
+             * Pmweb No
+             * @description PMWeb 正式编号
+             */
+            pmweb_no?: string | null;
+            /**
+             * Doc Type
+             * @description 文件类型（WIR / MIR）
+             */
+            doc_type?: string | null;
+            /**
+             * Discipline
+             * @description 专业（BMS / SEC / ELV）
+             */
+            discipline?: string | null;
+            /**
+             * Description
+             * @description 检查内容描述
+             */
+            description?: string | null;
+            /**
+             * Drt Submitted
+             * @description DRT 提交日期
+             */
+            drt_submitted?: string | null;
+            /**
+             * Pmx Submitted
+             * @description PMX 提交日期
+             */
+            pmx_submitted?: string | null;
+            /**
+             * Cb Inspection
+             * @description C&B 检查日期
+             */
+            cb_inspection?: string | null;
+            /**
+             * Doc Status
+             * @description 文件批复状态
+             */
+            doc_status?: string | null;
+            /**
+             * Comment
+             * @description 顾问意见
+             */
+            comment?: string | null;
+            /**
+             * Another Desc
+             * @description 别称/中文描述
+             */
+            another_desc?: string | null;
+            /**
+             * Dc
+             * @description 所属 DC
+             */
+            dc?: string | null;
+            /**
+             * Filepath
+             * @description 签字件路径
+             */
+            filepath?: string | null;
+            /**
+             * Type Id
+             * @description WIR 类型 ID
+             */
+            type_id?: number | null;
+        };
+        /** CreateWirTypeParam */
+        CreateWirTypeParam: {
+            /**
+             * Type Cn
+             * @description 类型中文名
+             */
+            type_cn: string;
+            /**
+             * Type En
+             * @description 类型英文名
+             */
+            type_en: string;
+        };
         /** DataChangeEntity */
         DataChangeEntity: {
             /**
@@ -5643,6 +6004,17 @@ export interface components {
              * @description 中文名
              */
             label: string;
+        };
+        /**
+         * DeleteCustomerParam
+         * @description 删除客户参数
+         */
+        DeleteCustomerParam: {
+            /**
+             * Pks
+             * @description 客户 ID 列表
+             */
+            pks: number[];
         };
         /**
          * DeleteDataRuleParam
@@ -5794,6 +6166,14 @@ export interface components {
             /**
              * Pks
              * @description 任务调度 ID 列表
+             */
+            pks: number[];
+        };
+        /** DeleteWirRecordParam */
+        DeleteWirRecordParam: {
+            /**
+             * Pks
+             * @description WIR 记录 ID 列表
              */
             pks: number[];
         };
@@ -6302,6 +6682,69 @@ export interface components {
             roles: string[];
         };
         /**
+         * GetCustomerDetail
+         * @description 客户详情
+         */
+        GetCustomerDetail: {
+            /**
+             * Name
+             * @description 客户名称
+             */
+            name: string;
+            /**
+             * Phone
+             * @description 联系电话
+             */
+            phone?: string | null;
+            /**
+             * Level
+             * @description 客户等级（0：普通、1：重要、2：VIP）
+             * @default 0
+             */
+            level: number;
+            /**
+             * @description 状态（0：停用、1：正常）
+             * @default 1
+             */
+            status: components["schemas"]["StatusType"];
+            /**
+             * Remark
+             * @description 备注
+             */
+            remark?: string | null;
+            /**
+             * Id
+             * @description 客户 ID
+             */
+            id: string | number;
+            /**
+             * Dept Id
+             * @description 所属部门 ID
+             */
+            dept_id?: string | number | null;
+            /**
+             * Owner Id
+             * @description 负责人用户 ID
+             */
+            owner_id?: number | null;
+            /**
+             * Created By
+             * @description 创建者用户 ID
+             */
+            created_by: number;
+            /**
+             * Created Time
+             * Format: date-time
+             * @description 创建时间
+             */
+            created_time: string;
+            /**
+             * Updated Time
+             * @description 更新时间
+             */
+            updated_time?: string | null;
+        };
+        /**
          * GetDataChangeDetail
          * @description 数据变更记录（#260）
          */
@@ -6594,7 +7037,7 @@ export interface components {
             /** Notification Id */
             notification_id?: string | number | null;
             /** User Id */
-            user_id?: string | number;
+            user_id?: null | string | number;
             /** Bot Id */
             bot_id?: number | null;
             /** Kind */
@@ -9700,6 +10143,128 @@ export interface components {
              */
             updated_time?: string | null;
         };
+        /** GetWirRecordDetail */
+        GetWirRecordDetail: {
+            /**
+             * Id
+             * @description WIR 记录 ID
+             */
+            id: string | number;
+            /**
+             * From Party
+             * @description 提交方
+             */
+            from_party?: string | null;
+            /**
+             * Tml No
+             * @description TML 申请编号
+             */
+            tml_no?: string | null;
+            /**
+             * Pmweb No
+             * @description PMWeb 正式编号
+             */
+            pmweb_no?: string | null;
+            /**
+             * Doc Type
+             * @description 文件类型
+             */
+            doc_type?: string | null;
+            /**
+             * Discipline
+             * @description 专业
+             */
+            discipline?: string | null;
+            /**
+             * Description
+             * @description 检查内容描述
+             */
+            description?: string | null;
+            /**
+             * Drt Submitted
+             * @description DRT 提交日期
+             */
+            drt_submitted?: string | null;
+            /**
+             * Pmx Submitted
+             * @description PMX 提交日期
+             */
+            pmx_submitted?: string | null;
+            /**
+             * Cb Inspection
+             * @description C&B 检查日期
+             */
+            cb_inspection?: string | null;
+            /**
+             * Doc Status
+             * @description 文件批复状态
+             */
+            doc_status?: string | null;
+            /**
+             * Comment
+             * @description 顾问意见
+             */
+            comment?: string | null;
+            /**
+             * Another Desc
+             * @description 别称/中文描述
+             */
+            another_desc?: string | null;
+            /**
+             * Dc
+             * @description 所属 DC
+             */
+            dc?: string | null;
+            /**
+             * Filepath
+             * @description 签字件路径
+             */
+            filepath?: string | null;
+            /**
+             * Type Id
+             * @description WIR 类型 ID
+             */
+            type_id?: null | string | number;
+            /**
+             * Type Cn
+             * @description 类型中文名（join wir_type）
+             */
+            type_cn?: string | null;
+            /**
+             * Type En
+             * @description 类型英文名（join wir_type）
+             */
+            type_en?: string | null;
+            /**
+             * Created Time
+             * Format: date-time
+             * @description 创建时间
+             */
+            created_time: string;
+            /**
+             * Updated Time
+             * @description 更新时间
+             */
+            updated_time?: string | null;
+        };
+        /** GetWirTypeDetail */
+        GetWirTypeDetail: {
+            /**
+             * Id
+             * @description 类型 ID
+             */
+            id: string | number;
+            /**
+             * Type Cn
+             * @description 类型中文名
+             */
+            type_cn: string;
+            /**
+             * Type En
+             * @description 类型英文名
+             */
+            type_en: string;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -10409,6 +10974,32 @@ export interface components {
             total_pages: number;
             links: components["schemas"]["_Links"];
         };
+        /** PageData[GetCustomerDetail] */
+        PageData_GetCustomerDetail_: {
+            /** Items */
+            items: components["schemas"]["GetCustomerDetail"][];
+            /**
+             * Total
+             * @description 数据总条数
+             */
+            total: number;
+            /**
+             * Page
+             * @description 当前页码
+             */
+            page: number;
+            /**
+             * Size
+             * @description 每页数量
+             */
+            size: number;
+            /**
+             * Total Pages
+             * @description 总页数
+             */
+            total_pages: number;
+            links: components["schemas"]["_Links"];
+        };
         /** PageData[GetDataChangeDetail] */
         PageData_GetDataChangeDetail_: {
             /** Items */
@@ -11033,6 +11624,32 @@ export interface components {
             total_pages: number;
             links: components["schemas"]["_Links"];
         };
+        /** PageData[GetWirRecordDetail] */
+        PageData_GetWirRecordDetail_: {
+            /** Items */
+            items: components["schemas"]["GetWirRecordDetail"][];
+            /**
+             * Total
+             * @description 数据总条数
+             */
+            total: number;
+            /**
+             * Page
+             * @description 当前页码
+             */
+            page: number;
+            /**
+             * Size
+             * @description 每页数量
+             */
+            size: number;
+            /**
+             * Total Pages
+             * @description 总页数
+             */
+            total_pages: number;
+            links: components["schemas"]["_Links"];
+        };
         /** PingResult */
         PingResult: {
             /**
@@ -11555,6 +12172,22 @@ export interface components {
              */
             msg: string;
             data: components["schemas"]["GetCurrentUserInfoWithRelationDetail"];
+        };
+        /** ResponseSchemaModel[GetCustomerDetail] */
+        ResponseSchemaModel_GetCustomerDetail_: {
+            /**
+             * Code
+             * @description 返回状态码
+             * @default 200
+             */
+            code: number;
+            /**
+             * Msg
+             * @description 返回信息
+             * @default 请求成功
+             */
+            msg: string;
+            data: components["schemas"]["GetCustomerDetail"];
         };
         /** ResponseSchemaModel[GetDataChangeIntegrity] */
         ResponseSchemaModel_GetDataChangeIntegrity_: {
@@ -12132,6 +12765,38 @@ export interface components {
             msg: string;
             data: components["schemas"]["GetWebhookDetail"];
         };
+        /** ResponseSchemaModel[GetWirRecordDetail] */
+        ResponseSchemaModel_GetWirRecordDetail_: {
+            /**
+             * Code
+             * @description 返回状态码
+             * @default 200
+             */
+            code: number;
+            /**
+             * Msg
+             * @description 返回信息
+             * @default 请求成功
+             */
+            msg: string;
+            data: components["schemas"]["GetWirRecordDetail"];
+        };
+        /** ResponseSchemaModel[GetWirTypeDetail] */
+        ResponseSchemaModel_GetWirTypeDetail_: {
+            /**
+             * Code
+             * @description 返回状态码
+             * @default 200
+             */
+            code: number;
+            /**
+             * Msg
+             * @description 返回信息
+             * @default 请求成功
+             */
+            msg: string;
+            data: components["schemas"]["GetWirTypeDetail"];
+        };
         /** ResponseSchemaModel[ImportCommitDetail] */
         ResponseSchemaModel_ImportCommitDetail_: {
             /**
@@ -12307,6 +12972,22 @@ export interface components {
              */
             msg: string;
             data: components["schemas"]["PageData_GetConversationDetail_"];
+        };
+        /** ResponseSchemaModel[PageData[GetCustomerDetail]] */
+        ResponseSchemaModel_PageData_GetCustomerDetail__: {
+            /**
+             * Code
+             * @description 返回状态码
+             * @default 200
+             */
+            code: number;
+            /**
+             * Msg
+             * @description 返回信息
+             * @default 请求成功
+             */
+            msg: string;
+            data: components["schemas"]["PageData_GetCustomerDetail_"];
         };
         /** ResponseSchemaModel[PageData[GetDataChangeDetail]] */
         ResponseSchemaModel_PageData_GetDataChangeDetail__: {
@@ -12691,6 +13372,22 @@ export interface components {
              */
             msg: string;
             data: components["schemas"]["PageData_GetWebhookDeliveryRow_"];
+        };
+        /** ResponseSchemaModel[PageData[GetWirRecordDetail]] */
+        ResponseSchemaModel_PageData_GetWirRecordDetail__: {
+            /**
+             * Code
+             * @description 返回状态码
+             * @default 200
+             */
+            code: number;
+            /**
+             * Msg
+             * @description 返回信息
+             * @default 请求成功
+             */
+            msg: string;
+            data: components["schemas"]["PageData_GetWirRecordDetail_"];
         };
         /** ResponseSchemaModel[PingResult] */
         ResponseSchemaModel_PingResult_: {
@@ -13294,6 +13991,23 @@ export interface components {
             msg: string;
             /** Data */
             data: components["schemas"]["GetWebhookDetail"][];
+        };
+        /** ResponseSchemaModel[list[GetWirTypeDetail]] */
+        ResponseSchemaModel_list_GetWirTypeDetail__: {
+            /**
+             * Code
+             * @description 返回状态码
+             * @default 200
+             */
+            code: number;
+            /**
+             * Msg
+             * @description 返回信息
+             * @default 请求成功
+             */
+            msg: string;
+            /** Data */
+            data: components["schemas"]["GetWirTypeDetail"][];
         };
         /** ResponseSchemaModel[list[OpenScopeItem]] */
         ResponseSchemaModel_list_OpenScopeItem__: {
@@ -14183,6 +14897,48 @@ export interface components {
             title: string;
         };
         /**
+         * UpdateCustomerParam
+         * @description 更新客户参数
+         */
+        UpdateCustomerParam: {
+            /**
+             * Name
+             * @description 客户名称
+             */
+            name: string;
+            /**
+             * Phone
+             * @description 联系电话
+             */
+            phone?: string | null;
+            /**
+             * Level
+             * @description 客户等级（0：普通、1：重要、2：VIP）
+             * @default 0
+             */
+            level: number;
+            /**
+             * @description 状态（0：停用、1：正常）
+             * @default 1
+             */
+            status: components["schemas"]["StatusType"];
+            /**
+             * Remark
+             * @description 备注
+             */
+            remark?: string | null;
+            /**
+             * Dept Id
+             * @description 所属部门 ID
+             */
+            dept_id?: number | null;
+            /**
+             * Owner Id
+             * @description 负责人用户 ID
+             */
+            owner_id?: number | null;
+        };
+        /**
          * UpdateDataRuleParam
          * @description 更新数据规则参数
          */
@@ -14945,6 +15701,97 @@ export interface components {
              * @description 备注
              */
             remark?: string | null;
+        };
+        /** UpdateWirRecordParam */
+        UpdateWirRecordParam: {
+            /**
+             * From Party
+             * @description 提交方
+             */
+            from_party?: string | null;
+            /**
+             * Tml No
+             * @description TML 申请编号
+             */
+            tml_no?: string | null;
+            /**
+             * Pmweb No
+             * @description PMWeb 正式编号
+             */
+            pmweb_no?: string | null;
+            /**
+             * Doc Type
+             * @description 文件类型（WIR / MIR）
+             */
+            doc_type?: string | null;
+            /**
+             * Discipline
+             * @description 专业（BMS / SEC / ELV）
+             */
+            discipline?: string | null;
+            /**
+             * Description
+             * @description 检查内容描述
+             */
+            description?: string | null;
+            /**
+             * Drt Submitted
+             * @description DRT 提交日期
+             */
+            drt_submitted?: string | null;
+            /**
+             * Pmx Submitted
+             * @description PMX 提交日期
+             */
+            pmx_submitted?: string | null;
+            /**
+             * Cb Inspection
+             * @description C&B 检查日期
+             */
+            cb_inspection?: string | null;
+            /**
+             * Doc Status
+             * @description 文件批复状态
+             */
+            doc_status?: string | null;
+            /**
+             * Comment
+             * @description 顾问意见
+             */
+            comment?: string | null;
+            /**
+             * Another Desc
+             * @description 别称/中文描述
+             */
+            another_desc?: string | null;
+            /**
+             * Dc
+             * @description 所属 DC
+             */
+            dc?: string | null;
+            /**
+             * Filepath
+             * @description 签字件路径
+             */
+            filepath?: string | null;
+            /**
+             * Type Id
+             * @description WIR 类型 ID
+             */
+            type_id?: number | null;
+        };
+        /** UpdateWirTypeParam */
+        UpdateWirTypeParam: {
+            /**
+             * Type Cn
+             * @description 类型中文名
+             */
+            type_cn: string;
+            /**
+             * Type En
+             * @description 类型英文名
+             */
+            type_en: string;
         };
         /**
          * UserPermissionType
@@ -20793,6 +21640,483 @@ export interface operations {
             };
         };
     };
+    download_wir_type_import_template_api_v1_sys_wir_types_import_template_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    preview_wir_type_import_api_v1_sys_wir_types_import_preview_post: {
+        parameters: {
+            query?: {
+                /** @description 导入模式（create：只新增、upsert：新增并更新） */
+                mode?: "create" | "upsert" | "update";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_preview_wir_type_import_api_v1_sys_wir_types_import_preview_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSchemaModel_ImportPreviewDetail_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    commit_wir_type_import_api_v1_sys_wir_types_import_commit_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImportCommitParam"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSchemaModel_ImportCommitDetail_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    download_wir_import_template_api_v1_sys_wir_import_template_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    preview_wir_import_api_v1_sys_wir_import_preview_post: {
+        parameters: {
+            query?: {
+                /** @description 导入模式（create：只新增、upsert：新增并更新） */
+                mode?: "create" | "upsert" | "update";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_preview_wir_import_api_v1_sys_wir_import_preview_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSchemaModel_ImportPreviewDetail_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    commit_wir_import_api_v1_sys_wir_import_commit_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImportCommitParam"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSchemaModel_ImportCommitDetail_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_wir_types_api_v1_sys_wir_types_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSchemaModel_list_GetWirTypeDetail__"];
+                };
+            };
+        };
+    };
+    create_wir_type_api_v1_sys_wir_types_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateWirTypeParam"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSchemaModel_GetWirTypeDetail_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_wir_type_api_v1_sys_wir_types__pk__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 类型 ID */
+                pk: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateWirTypeParam"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseModel"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_wir_type_api_v1_sys_wir_types__pk__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 类型 ID */
+                pk: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseModel"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_wir_records_api_v1_sys_wir_get: {
+        parameters: {
+            query?: {
+                /** @description 所属 DC */
+                dc?: string | null;
+                /** @description 专业 */
+                discipline?: string | null;
+                /** @description 批复状态 */
+                doc_status?: string | null;
+                /** @description 类型 ID */
+                type_id?: number | null;
+                /** @description 搜索（描述 / 别称 / 编号） */
+                search?: string | null;
+                /** @description 页码 */
+                page?: number;
+                /** @description 每页数量 */
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSchemaModel_PageData_GetWirRecordDetail__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_wir_record_api_v1_sys_wir_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateWirRecordParam"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSchemaModel_GetWirRecordDetail_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_wir_records_api_v1_sys_wir_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeleteWirRecordParam"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseModel"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_wir_record_api_v1_sys_wir__pk__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description WIR 记录 ID */
+                pk: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSchemaModel_GetWirRecordDetail_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_wir_record_api_v1_sys_wir__pk__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description WIR 记录 ID */
+                pk: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateWirRecordParam"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseModel"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_startable_api_v1_sys_workflow_startable_get: {
         parameters: {
             query?: never;
@@ -22865,6 +24189,182 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResponseSchemaModel_GetTaskResultDetail_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_customer_api_v1_crm_customers__pk__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 客户 ID */
+                pk: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSchemaModel_GetCustomerDetail_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_customer_api_v1_crm_customers__pk__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description 客户 ID */
+                pk: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCustomerParam"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseModel"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_customers_paginated_api_v1_crm_customers_get: {
+        parameters: {
+            query?: {
+                /** @description 客户名称 */
+                name?: string | null;
+                /** @description 联系电话 */
+                phone?: string | null;
+                /** @description 客户等级 */
+                level?: number | null;
+                /** @description 状态 */
+                status?: number | null;
+                /** @description 页码 */
+                page?: number;
+                /** @description 每页数量 */
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseSchemaModel_PageData_GetCustomerDetail__"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_customer_api_v1_crm_customers_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCustomerParam"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseModel"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_customers_api_v1_crm_customers_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeleteCustomerParam"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseModel"];
                 };
             };
             /** @description Validation Error */

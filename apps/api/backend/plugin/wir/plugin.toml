@@ -1,0 +1,14 @@
+[plugin]
+summary = "WIR 台账"
+version = "0.1.0"
+description = "Work Inspection Request 台账管理：多 DC 合并的 WIR 提交/批复记录与类型参考"
+author = "rico"
+tags = ["other"]
+database = ["mysql", "postgresql", "sqlserver"]
+
+[app]
+extend = "admin"
+
+[api.wir]
+prefix = "/wir"
+tags = "WIR 台账"

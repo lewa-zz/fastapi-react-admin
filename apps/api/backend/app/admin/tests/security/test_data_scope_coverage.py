@@ -64,6 +64,8 @@ EXEMPT: dict[str, str] = {
         '导出记录按 created_by == 当前用户强制过滤（同收件箱），接口只挂登录；'
         '再叠部门维度会让受限用户连自己的导出都看不到'
     ),
+    'CRUDWirType': 'WIR 类型是全局参考数据（下拉选项），表里没有部门 / 归属人维度；过滤只有 fail-closed 一种效果',
+    'CRUDWirRecord': 'WIR 台账是项目级共享记录，表里没有可过滤维度，过滤只有 fail-closed 一种效果',
 }
 
 

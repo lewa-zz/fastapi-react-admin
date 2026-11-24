@@ -150,6 +150,10 @@ class ImportSpec:
     #: 记进 `CommitOutcome.failed`，别让它毁掉整个事务（PostgreSQL 上一句失败整个事务就作废）
     commit: Callable[[AsyncSession, list[ImportRow], ImportContext], Awaitable[CommitOutcome]]
     modes: tuple[ImportMode, ...] = ('create',)
+    #: 按名字取工作表：业务系统导出的文件里，数据可能不在第一张表上（WIR 台账的
+    #: `type` / `WIR` 两张表）。按顺序找，一个都不在时回落第一张 —— 于是
+    #: 「下载模板填完再导」和「直接导业务文件」共用同一份定义
+    sheet_names: tuple[str, ...] = ()
     #: 说明页里额外的几句话（翻译键）
     notes: tuple[str, ...] = ()
     #: 单次行数上限；不给用 `TABLE_IMPORT_MAX_ROWS`
