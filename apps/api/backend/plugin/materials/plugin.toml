@@ -1,0 +1,14 @@
+[plugin]
+summary = "材料管理"
+version = "0.1.0"
+description = "BKK03 材料主数据（表前缀 pm_，后续指令/报价）"
+author = "rico"
+tags = ["other"]
+database = ["mysql", "postgresql", "sqlserver"]
+
+[app]
+extend = "admin"
+
+[api.materials]
+prefix = "/materials"
+tags = "材料管理"
