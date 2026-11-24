@@ -21,6 +21,7 @@
 | 字典项 | `dict:data:export` | `dict:data:import`（三种模式，跨类型） |
 | 通知公告 | `sys:notice:export` | —— |
 | 登录日志 / 操作日志 | `log:login:export` / `log:opera:export` | —— |
+| WIR 台账 | —— | `wir:import`（类型 / 记录两个资源；原始文件的两张表按 `sheet_names` 自动挑） |
 
 ## 导出（`ExportButton`）
 

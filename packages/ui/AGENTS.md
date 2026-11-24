@@ -148,6 +148,7 @@ vite 解析 `exports` 时只取数组里的第一项、不会回退。**别指�
 | 长表单分组 | `_shared/form-fields.tsx` 的 `FormSection`（`▌标题 ────`）。渲染成 `fieldset` + `legend`，读屏会念「联系信息 分组」。**只给字段多的表单用** —— 菜单 12 个、用户 7 个值得，4 个字段的公告加了就是装饰 |
 | DropdownMenuLabel | 必须包在 `DropdownMenuGroup` 内，否则 Base UI 抛 `MenuGroupContext is missing` |
 | 表格容器 | `overflow-x-auto`，**不要** `overflow-hidden`（会把最右侧操作列裁掉，点不到） |
+| 宽表的行操作 | 列多到会横向滚动时给 `DataTable` 传 `stickyActions` —— 否则 `…` 跟着内容滚出视口，用户看到的是「这一页没有编辑 / 删除」。实测 WIR 台账：修列宽之前 1600px 视口下操作列落在 x=1792（视口外），收窄后最小宽度仍约 990px，1280 以下照样滚。钉住那一格背景要求**不透明**：表体悬停态用的是 `bg-muted/50`（50% alpha），直接搬会透出滚过去的单元格，所以走 `color-mix` 合成不透明色 |
 | 二次确认 | `platform/shell/confirm-dialog`（支持 async + pending），渲染成触发器的兄弟节点，不能放进 `DropdownMenuContent`。**ui 下没有同名组件** —— 原来有一个不支持 async pending 的重复实现，按目录直觉 import 它就中招，已删 |
 | 树形多选 | `packages/ui/components/tree`（三态 + 级联 + 过滤）。**角色授权不用它**，见 [pages 分册](../platform/src/pages/AGENTS.md) 的「主从页」 |
 | 提示条 / 警告条 | `ui/components/alert` 的 `<Alert tone>`。**不要手写「图标 + 彩色边框盒子」** —— 全仓抄过 28 处、四五种形状（`ring-1` vs `border`、`rounded-md` vs `rounded-lg`、内边距四种）。判据是「会不会自己消失」：Alert 是版面的一部分，`toast()` 不是，取数失败是 `QueryError` |

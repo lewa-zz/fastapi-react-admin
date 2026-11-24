@@ -1,6 +1,6 @@
 from celery import states
 from celery.backends.base import BaseBackend
-from celery.backends.database import retry, session_cleanup
+from celery.backends.database import session_cleanup
 from celery.exceptions import ImproperlyConfigured
 from celery.utils.time import maybe_timedelta
 from sqlalchemy import PickleType
@@ -72,7 +72,6 @@ class DatabaseBackend(BaseBackend):
             **self.engine_options,
         )
 
-    @retry
     def _store_result(self, task_id, result, state, traceback=None, request=None, **kwargs) -> None:  # ruff:ignore[missing-type-function-argument]
         """Store return value and state of an executed task."""
         session = self.result_session()
@@ -109,7 +108,6 @@ class DatabaseBackend(BaseBackend):
             value = meta.get(column)
             setattr(task, column, value)
 
-    @retry
     def _get_task_meta_for(self, task_id: str):  # ruff:ignore[missing-return-type-private-function]
         """Get task meta-data for a task by id."""
         session = self.result_session()
@@ -127,7 +125,6 @@ class DatabaseBackend(BaseBackend):
                 data['kwargs'] = self.decode(data['kwargs'])
             return self.meta_from_decoded(data)
 
-    @retry
     def _save_group(self, group_id: str, result: PickleType):  # ruff:ignore[missing-return-type-private-function]
         """Store the result of an executed group."""
         session = self.result_session()
@@ -138,7 +135,6 @@ class DatabaseBackend(BaseBackend):
             session.commit()
             return result
 
-    @retry
     def _restore_group(self, group_id: str) -> dict | None:
         """Get meta-data for group by id."""
         session = self.result_session()
@@ -147,7 +143,6 @@ class DatabaseBackend(BaseBackend):
             if group:
                 return group.to_dict()
 
-    @retry
     def _delete_group(self, group_id: str) -> None:
         """Delete meta-data for group by id."""
         session = self.result_session()
@@ -156,7 +151,6 @@ class DatabaseBackend(BaseBackend):
             session.flush()
             session.commit()
 
-    @retry
     def _forget(self, task_id: str) -> None:
         """Forget about result."""
         session = self.result_session()

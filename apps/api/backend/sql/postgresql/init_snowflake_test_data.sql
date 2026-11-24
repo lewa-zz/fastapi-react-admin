@@ -184,3 +184,12 @@ values
 
 insert into sys_data_change_chain (id, head_seq, head_hash, anchor_seq, anchor_hash)
 values (1, 0, '', 0, '');
+
+insert into sys_menu (id, title, name, path, sort, icon, type, perms, status, display, link, remark, parent_id, created_time, updated_time)
+values
+(2049629108299000001, '客户关系', 'Crm', '/crm', 5, 'mdi:handshake-outline', 0, null, 1, 1, '', null, null, '2026-11-01 00:00:00', null),
+(2049629108299000002, '客户管理', 'CrmCustomer', '/crm/customer', 1, 'mdi:account-tie-outline', 1, null, 1, 1, '', null, 2049629108299000001, '2026-11-01 00:00:00', null),
+(2049629108299000003, '查询', 'QueryCrmCustomer', null, 0, null, 2, 'crm:customer:list', 1, 0, '', null, 2049629108299000002, '2026-11-01 00:00:00', null),
+(2049629108299000004, '新增', 'AddCrmCustomer', null, 1, null, 2, 'crm:customer:add', 1, 0, '', null, 2049629108299000002, '2026-11-01 00:00:00', null),
+(2049629108299000005, '修改', 'EditCrmCustomer', null, 2, null, 2, 'crm:customer:edit', 1, 0, '', null, 2049629108299000002, '2026-11-01 00:00:00', null),
+(2049629108299000006, '删除', 'DeleteCrmCustomer', null, 3, null, 2, 'crm:customer:del', 1, 0, '', null, 2049629108299000002, '2026-11-01 00:00:00', null);

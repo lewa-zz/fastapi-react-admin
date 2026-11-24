@@ -23,6 +23,7 @@ import { Route as AuthAiConfirmRouteImport } from './routes/_auth/ai/confirm'
 import { Route as AuthAiMcpClientRouteImport } from './routes/_auth/ai/mcp-client'
 import { Route as AuthAiProviderRouteImport } from './routes/_auth/ai/provider'
 import { Route as AuthAiToolLogRouteImport } from './routes/_auth/ai/tool-log'
+import { Route as AuthCrmCustomerRouteImport } from './routes/_auth/crm/customer'
 import { Route as AuthEmbeddedNameRouteImport } from './routes/_auth/embedded/$name'
 import { Route as AuthLogChangeRouteImport } from './routes/_auth/log/change'
 import { Route as AuthLogLoginRouteImport } from './routes/_auth/log/login'
@@ -38,6 +39,7 @@ import { Route as AuthOpenLogRouteImport } from './routes/_auth/open/log'
 import { Route as AuthPluginsConfigRouteImport } from './routes/_auth/plugins/config'
 import { Route as AuthPluginsDictRouteImport } from './routes/_auth/plugins/dict'
 import { Route as AuthPluginsNoticeRouteImport } from './routes/_auth/plugins/notice'
+import { Route as AuthProjectWirRouteImport } from './routes/_auth/project/wir'
 import { Route as AuthSandboxComponentsRouteImport } from './routes/_auth/sandbox/components'
 import { Route as AuthSandboxQueryRouteImport } from './routes/_auth/sandbox/query'
 import { Route as AuthSandboxTableRouteImport } from './routes/_auth/sandbox/table'
@@ -125,6 +127,11 @@ const AuthAiToolLogRoute = AuthAiToolLogRouteImport.update({
   path: '/ai/tool-log',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthCrmCustomerRoute = AuthCrmCustomerRouteImport.update({
+  id: '/crm/customer',
+  path: '/crm/customer',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthEmbeddedNameRoute = AuthEmbeddedNameRouteImport.update({
   id: '/embedded/$name',
   path: '/embedded/$name',
@@ -198,6 +205,11 @@ const AuthPluginsDictRoute = AuthPluginsDictRouteImport.update({
 const AuthPluginsNoticeRoute = AuthPluginsNoticeRouteImport.update({
   id: '/plugins/notice',
   path: '/plugins/notice',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthProjectWirRoute = AuthProjectWirRouteImport.update({
+  id: '/project/wir',
+  path: '/project/wir',
   getParentRoute: () => AuthRoute,
 } as any)
 const AuthSandboxComponentsRoute = AuthSandboxComponentsRouteImport.update({
@@ -305,6 +317,7 @@ export interface FileRoutesByFullPath {
   '/ai/mcp-client': typeof AuthAiMcpClientRoute
   '/ai/provider': typeof AuthAiProviderRoute
   '/ai/tool-log': typeof AuthAiToolLogRoute
+  '/crm/customer': typeof AuthCrmCustomerRoute
   '/embedded/$name': typeof AuthEmbeddedNameRoute
   '/log/change': typeof AuthLogChangeRoute
   '/log/login': typeof AuthLogLoginRoute
@@ -320,6 +333,7 @@ export interface FileRoutesByFullPath {
   '/plugins/config': typeof AuthPluginsConfigRoute
   '/plugins/dict': typeof AuthPluginsDictRoute
   '/plugins/notice': typeof AuthPluginsNoticeRoute
+  '/project/wir': typeof AuthProjectWirRoute
   '/sandbox/components': typeof AuthSandboxComponentsRoute
   '/sandbox/query': typeof AuthSandboxQueryRoute
   '/sandbox/table': typeof AuthSandboxTableRoute
@@ -352,6 +366,7 @@ export interface FileRoutesByTo {
   '/ai/mcp-client': typeof AuthAiMcpClientRoute
   '/ai/provider': typeof AuthAiProviderRoute
   '/ai/tool-log': typeof AuthAiToolLogRoute
+  '/crm/customer': typeof AuthCrmCustomerRoute
   '/embedded/$name': typeof AuthEmbeddedNameRoute
   '/log/change': typeof AuthLogChangeRoute
   '/log/login': typeof AuthLogLoginRoute
@@ -367,6 +382,7 @@ export interface FileRoutesByTo {
   '/plugins/config': typeof AuthPluginsConfigRoute
   '/plugins/dict': typeof AuthPluginsDictRoute
   '/plugins/notice': typeof AuthPluginsNoticeRoute
+  '/project/wir': typeof AuthProjectWirRoute
   '/sandbox/components': typeof AuthSandboxComponentsRoute
   '/sandbox/query': typeof AuthSandboxQueryRoute
   '/sandbox/table': typeof AuthSandboxTableRoute
@@ -402,6 +418,7 @@ export interface FileRoutesById {
   '/_auth/ai/mcp-client': typeof AuthAiMcpClientRoute
   '/_auth/ai/provider': typeof AuthAiProviderRoute
   '/_auth/ai/tool-log': typeof AuthAiToolLogRoute
+  '/_auth/crm/customer': typeof AuthCrmCustomerRoute
   '/_auth/embedded/$name': typeof AuthEmbeddedNameRoute
   '/_auth/log/change': typeof AuthLogChangeRoute
   '/_auth/log/login': typeof AuthLogLoginRoute
@@ -417,6 +434,7 @@ export interface FileRoutesById {
   '/_auth/plugins/config': typeof AuthPluginsConfigRoute
   '/_auth/plugins/dict': typeof AuthPluginsDictRoute
   '/_auth/plugins/notice': typeof AuthPluginsNoticeRoute
+  '/_auth/project/wir': typeof AuthProjectWirRoute
   '/_auth/sandbox/components': typeof AuthSandboxComponentsRoute
   '/_auth/sandbox/query': typeof AuthSandboxQueryRoute
   '/_auth/sandbox/table': typeof AuthSandboxTableRoute
@@ -451,6 +469,7 @@ export interface FileRouteTypes {
     | '/ai/mcp-client'
     | '/ai/provider'
     | '/ai/tool-log'
+    | '/crm/customer'
     | '/embedded/$name'
     | '/log/change'
     | '/log/login'
@@ -466,6 +485,7 @@ export interface FileRouteTypes {
     | '/plugins/config'
     | '/plugins/dict'
     | '/plugins/notice'
+    | '/project/wir'
     | '/sandbox/components'
     | '/sandbox/query'
     | '/sandbox/table'
@@ -498,6 +518,7 @@ export interface FileRouteTypes {
     | '/ai/mcp-client'
     | '/ai/provider'
     | '/ai/tool-log'
+    | '/crm/customer'
     | '/embedded/$name'
     | '/log/change'
     | '/log/login'
@@ -513,6 +534,7 @@ export interface FileRouteTypes {
     | '/plugins/config'
     | '/plugins/dict'
     | '/plugins/notice'
+    | '/project/wir'
     | '/sandbox/components'
     | '/sandbox/query'
     | '/sandbox/table'
@@ -547,6 +569,7 @@ export interface FileRouteTypes {
     | '/_auth/ai/mcp-client'
     | '/_auth/ai/provider'
     | '/_auth/ai/tool-log'
+    | '/_auth/crm/customer'
     | '/_auth/embedded/$name'
     | '/_auth/log/change'
     | '/_auth/log/login'
@@ -562,6 +585,7 @@ export interface FileRouteTypes {
     | '/_auth/plugins/config'
     | '/_auth/plugins/dict'
     | '/_auth/plugins/notice'
+    | '/_auth/project/wir'
     | '/_auth/sandbox/components'
     | '/_auth/sandbox/query'
     | '/_auth/sandbox/table'
@@ -689,6 +713,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthAiToolLogRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/crm/customer': {
+      id: '/_auth/crm/customer'
+      path: '/crm/customer'
+      fullPath: '/crm/customer'
+      preLoaderRoute: typeof AuthCrmCustomerRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/embedded/$name': {
       id: '/_auth/embedded/$name'
       path: '/embedded/$name'
@@ -792,6 +823,13 @@ declare module '@tanstack/react-router' {
       path: '/plugins/notice'
       fullPath: '/plugins/notice'
       preLoaderRoute: typeof AuthPluginsNoticeRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/project/wir': {
+      id: '/_auth/project/wir'
+      path: '/project/wir'
+      fullPath: '/project/wir'
+      preLoaderRoute: typeof AuthProjectWirRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/sandbox/components': {
@@ -933,6 +971,7 @@ interface AuthRouteChildren {
   AuthAiMcpClientRoute: typeof AuthAiMcpClientRoute
   AuthAiProviderRoute: typeof AuthAiProviderRoute
   AuthAiToolLogRoute: typeof AuthAiToolLogRoute
+  AuthCrmCustomerRoute: typeof AuthCrmCustomerRoute
   AuthEmbeddedNameRoute: typeof AuthEmbeddedNameRoute
   AuthLogChangeRoute: typeof AuthLogChangeRoute
   AuthLogLoginRoute: typeof AuthLogLoginRoute
@@ -948,6 +987,7 @@ interface AuthRouteChildren {
   AuthPluginsConfigRoute: typeof AuthPluginsConfigRoute
   AuthPluginsDictRoute: typeof AuthPluginsDictRoute
   AuthPluginsNoticeRoute: typeof AuthPluginsNoticeRoute
+  AuthProjectWirRoute: typeof AuthProjectWirRoute
   AuthSandboxComponentsRoute: typeof AuthSandboxComponentsRoute
   AuthSandboxQueryRoute: typeof AuthSandboxQueryRoute
   AuthSandboxTableRoute: typeof AuthSandboxTableRoute
@@ -978,6 +1018,7 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthAiMcpClientRoute: AuthAiMcpClientRoute,
   AuthAiProviderRoute: AuthAiProviderRoute,
   AuthAiToolLogRoute: AuthAiToolLogRoute,
+  AuthCrmCustomerRoute: AuthCrmCustomerRoute,
   AuthEmbeddedNameRoute: AuthEmbeddedNameRoute,
   AuthLogChangeRoute: AuthLogChangeRoute,
   AuthLogLoginRoute: AuthLogLoginRoute,
@@ -993,6 +1034,7 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthPluginsConfigRoute: AuthPluginsConfigRoute,
   AuthPluginsDictRoute: AuthPluginsDictRoute,
   AuthPluginsNoticeRoute: AuthPluginsNoticeRoute,
+  AuthProjectWirRoute: AuthProjectWirRoute,
   AuthSandboxComponentsRoute: AuthSandboxComponentsRoute,
   AuthSandboxQueryRoute: AuthSandboxQueryRoute,
   AuthSandboxTableRoute: AuthSandboxTableRoute,

@@ -115,6 +115,11 @@ packages = ["backend"]
 path = "backend/__init__.py"
 
 [tool.pytest.ini_options]
+# 测试跑在**独立的 fba_test 库**上（conftest 覆盖了 get_db）。
+# 库不存在时报的是 sqlalchemy 连接错误，很难看出是「没建库」——
+# 建库和建表的命令写在 README 的「跑测试」一节。
+addopts = "-q --strict-markers"
+python_files = ["test_*.py"]
 # 固定扫描范围。不设的话 pytest 会连 .venv 一起扫，几千个第三方 test_*.py
 #
 # 🔴 **新增 app 或插件时要往这里加一行**，否则那个模块的测试**不会被收集** ——
@@ -124,14 +129,10 @@ path = "backend/__init__.py"
 testpaths = [
   "backend/app/admin/tests",
   "backend/app/task/tests",
+  "backend/app/crm/tests",
   "backend/plugin",
   "backend/tests"
 ]
-python_files = ["test_*.py"]
-# 测试跑在**独立的 fba_test 库**上（conftest 覆盖了 get_db）。
-# 库不存在时报的是 sqlalchemy 连接错误，很难看出是「没建库」——
-# 建库和建表的命令写在 README 的「跑测试」一节。
-addopts = "-q --strict-markers"
 
 [tool.ruff]
 line-length = 120
