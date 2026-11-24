@@ -16,11 +16,13 @@ WIR 插件的种子 / 迁移建的，两个插件共用。所以：
 ⚠️ `source_id` 可空，SQL Server 的 UNIQUE 约束认为多个 NULL 彼此相等 —— 那里改用
 只对非 NULL 生效的筛选唯一索引（同 `plugin/wir` 的 `_TML_NO_UNIQUE`）。
 
-索引清单与模型的 `index=True` 一一对应（卡片点名的 `kind` / `category+active` /
-`name_cn` / `brand` + `active` / `category` 两条单列）：跑
-`alembic revision --autogenerate` 探针时它只吐出 `ix_pm_material_kind` /
-`ix_pm_material_name_cn` 两条（其余索引早已在模型里），说明**没有别的 autogenerate
-噪声**，就把那两行原样折进本文件，不额外叠一条迁移。
+索引清单与模型的 `index=True` 一一对应，**严格按卡片那 4 条二级索引**：
+`kind` / `(category, active)` / `name_cn` / `brand`。`category` 与 `active` 不另建单列索引 ——
+复合索引 `(category, active)` 的最左前缀已经服务「只按 category 过滤」，布尔列单选性极低。
+
+（历史：`aa44f3c` 删掉过 `kind` / `name_cn`、又加了单列 `category` / `active`；
+`ecf1bf6` 补回前两条，单列那两条一直留到本轮 —— 现在四处口径（卡片 / 模型 / 迁移 / 本目录
+`AGENTS.md`）统一成 4 条。）
 
 `downgrade` 只删自己那 5 条菜单和 `pm_material`；`Project` 是 WIR 建的和本插件共用的。
 """
@@ -129,12 +131,9 @@ def _create_table() -> None:
         )
     else:
         op.create_unique_constraint('uk_pm_material_source_id_deleted', 'pm_material', ['source_id', 'deleted'])
-    op.create_index('ix_pm_material_active', 'pm_material', ['active'], unique=False)
     op.create_index('ix_pm_material_brand', 'pm_material', ['brand'], unique=False)
-    op.create_index('ix_pm_material_category', 'pm_material', ['category'], unique=False)
     op.create_index('ix_pm_material_category_active', 'pm_material', ['category', 'active'], unique=False)
     op.create_index(op.f('ix_pm_material_id'), 'pm_material', ['id'], unique=True)
-    # 这两条是 autogenerate 探针原样吐出来的（见文件头），索引名走 naming_convention
     op.create_index(op.f('ix_pm_material_kind'), 'pm_material', ['kind'], unique=False)
     op.create_index(op.f('ix_pm_material_name_cn'), 'pm_material', ['name_cn'], unique=False)
 

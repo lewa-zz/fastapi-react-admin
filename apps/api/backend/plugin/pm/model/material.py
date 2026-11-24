@@ -59,7 +59,9 @@ class PmMaterial(Base):
     #: Excel 的 `type` 列。`type` 是 Python 保留字，列名只能叫 `kind`。
     #: 值原样存（`PLC` / `Program（编程/软件）` / `Sensor（现场安装）`），实测最长 14
     kind: Mapped[str] = mapped_column(UniversalStr(64), index=True, comment='类型（PLC / Program（编程/软件）…）')
-    category: Mapped[str] = mapped_column(UniversalStr(64), index=True, comment='类别（BMS控制柜 …）')
+    #: 单列索引刻意**不建** —— 卡片要的是 `(category, active)` 组合索引，
+    #: 它同样服务「只按 category 过滤」（复合索引的最左前缀），再建一条单列是重复劳动
+    category: Mapped[str] = mapped_column(UniversalStr(64), comment='类别（BMS控制柜 …）')
     #: 列表页的 `kind` / `name_cn` 都是筛选/排序入参，卡片索引清单里点名要这两条单列索引
     name_cn: Mapped[str] = mapped_column(UniversalStr(128), index=True, comment='材料中文名')
     name_en: Mapped[str] = mapped_column(UniversalStr(256), comment='材料英文名')
@@ -79,4 +81,5 @@ class PmMaterial(Base):
     memo: Mapped[str | None] = mapped_column(UniversalStr(256), default=None, comment='备注')
     source: Mapped[str | None] = mapped_column(UniversalStr(128), default=None, comment='来源')
     currency: Mapped[str] = mapped_column(UniversalStr(8), default='RMB', server_default='RMB', comment='币种')
-    active: Mapped[bool] = mapped_column(default=True, index=True, comment='是否启用（停用不出现在候选里）')
+    #: 不单独建索引：布尔列选择性极低，且常态查询都带 category（走组合索引）
+    active: Mapped[bool] = mapped_column(default=True, comment='是否启用（停用不出现在候选里）')
