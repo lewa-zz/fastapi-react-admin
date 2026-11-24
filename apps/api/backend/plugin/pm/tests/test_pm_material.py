@@ -136,6 +136,90 @@ def test_update_material(client: TestClient, token_headers: dict[str, str]) -> N
     assert detail.json()['data']['name_cn'] == '测试控制器（改）'
 
 
+def test_update_to_an_occupied_source_id_is_a_conflict(client: TestClient, token_headers: dict[str, str]) -> None:
+    """`source_id` 的唯一性在**更新**路径上也要拦（不只是创建）
+
+    service 里那条分支只在「改成别人的 source_id」时才走到 —— 不测的话，
+    表现是 500（撞库唯一约束）或者静默写成两条同源行，两种都不在这条用例之外暴露。
+    """
+    first = create_material(client, token_headers)
+    second = create_material(client, token_headers, source_id=900002, name_cn='第二条')
+
+    res = client.put(f'{PM_MATERIALS}/{second["id"]}', headers=token_headers, json={'source_id': 900001})
+    assert res.status_code == 409, res.text
+    assert res.json()['code'] == 409
+
+    # 409 之后那条记录本身没被改（事务回滚 / 根本没写进去）
+    detail = client.get(f'{PM_MATERIALS}/{second["id"]}', headers=token_headers).json()['data']
+    assert detail['source_id'] == 900002
+    assert detail['name_cn'] == '第二条'
+    assert detail['id'] != first['id']
+
+
+def test_update_keeping_its_own_source_id_is_not_a_conflict(client: TestClient, token_headers: dict[str, str]) -> None:
+    """把**自己**的 `source_id` 原样带回来（前端整表单提交）不能报 409"""
+    created = create_material(client, token_headers)
+
+    res = client.put(
+        f'{PM_MATERIALS}/{created["id"]}',
+        headers=token_headers,
+        json={'source_id': 900001, 'memo': '整表单提交'},
+    )
+    assert res.status_code == 200, res.text
+    assert res.json()['code'] == 200
+
+    detail = client.get(f'{PM_MATERIALS}/{created["id"]}', headers=token_headers).json()['data']
+    assert detail['source_id'] == 900001
+    assert detail['memo'] == '整表单提交'
+    # 部分更新：没传的字段保持原值
+    assert detail['name_cn'] == '测试控制器'
+    assert detail['unit'] == '台/件'
+
+
+@pytest.mark.parametrize(
+    ('field', 'length', 'column_limit'),
+    [
+        ('name_en', 257, 256),  # UniversalStr(256)
+        ('kind', 65, 64),  # UniversalStr(64)
+        ('unit', 33, 32),  # UniversalStr(32)
+    ],
+)
+def test_overlong_field_is_a_422_naming_the_column(
+    client: TestClient, token_headers: dict[str, str], field: str, length: int, column_limit: int
+) -> None:
+    """`ColumnLengthChecked` 从模型列现读上限 —— 超长报 422 且带字段名，不是裸 SQL 500
+
+    判据和 `app/admin/tests/api_v1/test_column_length_gate.py` 同一套：状态码之外
+    还必须点出**字段名 + 上限**，否则一个「把所有请求都拒掉」的实现也是绿的。
+    """
+    res = client.post(PM_MATERIALS, headers=token_headers, json={**MATERIAL, field: 'x' * length})
+    assert res.status_code == 422, res.text
+    body = res.json()
+    assert body['code'] == 422, body
+    msg = body['msg']
+    assert field in msg, f'报错没点出是哪个字段：{msg}'
+    assert str(column_limit) in msg, f'报错没给出上限（列长度 {column_limit}）：{msg}'
+
+
+@pytest.mark.parametrize(('field', 'column_limit'), [('name_en', 256), ('kind', 64), ('unit', 32)])
+def test_value_exactly_at_the_column_limit_is_accepted(
+    client: TestClient, token_headers: dict[str, str], field: str, column_limit: int
+) -> None:
+    """正好等于上限要放过 —— 判据写成 `>=` 会把恰好填满的值拒掉，而那种误杀在界面上表现为「明明没超还是存不下」"""
+    created = create_material(client, token_headers, **{field: 'x' * column_limit})
+    assert created[field] == 'x' * column_limit
+
+
+def test_spec_longer_than_a_varchar_is_accepted(client: TestClient, token_headers: dict[str, str]) -> None:
+    """`spec` 是 `UniversalText`：实测源 Excel 里有 286 字符且含换行的规格，不该被截断/拒绝"""
+    spec = ('第一行规格描述；' * 40) + '\n' + ('第二行继续描述；' * 20)
+    created = create_material(client, token_headers, spec=spec)
+
+    detail = client.get(f'{PM_MATERIALS}/{created["id"]}', headers=token_headers).json()['data']
+    assert detail['spec'] == spec
+    assert '\n' in detail['spec']
+
+
 def test_duplicate_source_id_is_a_conflict(client: TestClient, token_headers: dict[str, str]) -> None:
     created = create_material(client, token_headers)
 
