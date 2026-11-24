@@ -43,6 +43,7 @@ import { WorkflowDefinitionPage } from "@admin/platform/pages/workflow-definitio
 import { WorkflowMonitorPage } from "@admin/platform/pages/workflow-monitor"
 import { CustomerPage } from "@admin/platform/pages/customer"
 import { WirPage } from "@admin/platform/pages/wir"
+import { MaterialPage } from "@admin/platform/pages/materials"
 
 /**
  * routeId → 页面组件。
@@ -97,4 +98,5 @@ export const pageRegistry: PageRegistry = {
   "/_auth/system/plugin": PluginPage,
   "/_auth/crm/customer": CustomerPage,
   "/_auth/project/wir": WirPage,
+  "/_auth/project/pm/materials": MaterialPage,
 }

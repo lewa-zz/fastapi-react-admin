@@ -58,6 +58,7 @@ import { Route as AuthSystemUserRouteImport } from './routes/_auth/system/user'
 import { Route as AuthWorkflowDefinitionRouteImport } from './routes/_auth/workflow/definition'
 import { Route as AuthWorkflowInboxRouteImport } from './routes/_auth/workflow/inbox'
 import { Route as AuthWorkflowMonitorRouteImport } from './routes/_auth/workflow/monitor'
+import { Route as AuthProjectPmMaterialsRouteImport } from './routes/_auth/project/pm/materials'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -303,6 +304,11 @@ const AuthWorkflowMonitorRoute = AuthWorkflowMonitorRouteImport.update({
   path: '/workflow/monitor',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthProjectPmMaterialsRoute = AuthProjectPmMaterialsRouteImport.update({
+  id: '/project/pm/materials',
+  path: '/project/pm/materials',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -352,6 +358,7 @@ export interface FileRoutesByFullPath {
   '/workflow/definition': typeof AuthWorkflowDefinitionRoute
   '/workflow/inbox': typeof AuthWorkflowInboxRoute
   '/workflow/monitor': typeof AuthWorkflowMonitorRoute
+  '/project/pm/materials': typeof AuthProjectPmMaterialsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -401,6 +408,7 @@ export interface FileRoutesByTo {
   '/workflow/definition': typeof AuthWorkflowDefinitionRoute
   '/workflow/inbox': typeof AuthWorkflowInboxRoute
   '/workflow/monitor': typeof AuthWorkflowMonitorRoute
+  '/project/pm/materials': typeof AuthProjectPmMaterialsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -453,6 +461,7 @@ export interface FileRoutesById {
   '/_auth/workflow/definition': typeof AuthWorkflowDefinitionRoute
   '/_auth/workflow/inbox': typeof AuthWorkflowInboxRoute
   '/_auth/workflow/monitor': typeof AuthWorkflowMonitorRoute
+  '/_auth/project/pm/materials': typeof AuthProjectPmMaterialsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -504,6 +513,7 @@ export interface FileRouteTypes {
     | '/workflow/definition'
     | '/workflow/inbox'
     | '/workflow/monitor'
+    | '/project/pm/materials'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -553,6 +563,7 @@ export interface FileRouteTypes {
     | '/workflow/definition'
     | '/workflow/inbox'
     | '/workflow/monitor'
+    | '/project/pm/materials'
   id:
     | '__root__'
     | '/'
@@ -604,6 +615,7 @@ export interface FileRouteTypes {
     | '/_auth/workflow/definition'
     | '/_auth/workflow/inbox'
     | '/_auth/workflow/monitor'
+    | '/_auth/project/pm/materials'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -958,6 +970,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthWorkflowMonitorRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/project/pm/materials': {
+      id: '/_auth/project/pm/materials'
+      path: '/project/pm/materials'
+      fullPath: '/project/pm/materials'
+      preLoaderRoute: typeof AuthProjectPmMaterialsRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
 
@@ -1006,6 +1025,7 @@ interface AuthRouteChildren {
   AuthWorkflowDefinitionRoute: typeof AuthWorkflowDefinitionRoute
   AuthWorkflowInboxRoute: typeof AuthWorkflowInboxRoute
   AuthWorkflowMonitorRoute: typeof AuthWorkflowMonitorRoute
+  AuthProjectPmMaterialsRoute: typeof AuthProjectPmMaterialsRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
@@ -1053,6 +1073,7 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthWorkflowDefinitionRoute: AuthWorkflowDefinitionRoute,
   AuthWorkflowInboxRoute: AuthWorkflowInboxRoute,
   AuthWorkflowMonitorRoute: AuthWorkflowMonitorRoute,
+  AuthProjectPmMaterialsRoute: AuthProjectPmMaterialsRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
