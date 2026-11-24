@@ -342,6 +342,14 @@ quote-style = "single"
 [tool.tombi]
 toml-version = "v1.1.0"
 
+# uv.lock 由 uv 生成，格式是 TOML 1.0（行内表不换行）。tombi 在 toml-version = "v1.1.0"
+# 下会把每张超长的行内表拆成多行 —— 那是 1.1 才允许的写法。实测同一个文件：uv 0.9.18 报
+# `Failed to parse uv.lock: newlines are unsupported in inline tables`（`pnpm dev` /
+# `uv run` / `uv sync` 全部起不来），uv 0.13.0 却能读 —— 所以 CI 与 pre-commit 是绿的，
+# 只有本机 uv 偏旧的人撞墙。锁文件交给 uv 自己，格式化器不许插手。
+[tool.tombi.files]
+exclude = ["uv.lock"]
+
 [[tool.tombi.schemas]]
 path = ".schemas/plugin.schema.json"
 include = ["backend/plugin/**/plugin.toml"]

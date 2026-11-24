@@ -185,6 +185,23 @@ Python 依赖归 `uv` 管（`pyproject.toml` + `uv.lock`），pnpm 不知道它�
 「依赖装齐了」**——两者是不同的代码路径。CI（`uv sync --locked`）和生产镜像
 （`requirements.txt`，pre-commit 的 `uv-export` 生成）本来就是对的，不用管。
 
+### 🔴 `uv.lock` 必须排除在 tombi 之外——否则 uv 解析不了它
+
+**症状**：`pnpm dev` / `uv run` / `uv sync` 起手就死，报的是和 tombi 毫无关系的 TOML 错误：
+`Failed to parse uv.lock ... newlines are unsupported in inline tables`（指向 `sdist = {`）。
+
+**根因**：`toml-version = "v1.1.0"` 下 tombi-format 会把每张超长行内表拆成多行（1.1 才允许），
+而 uv 始终按 TOML 1.0 写（`sdist = { url = …, hash = … }` 一行到底）。实测同一个文件：
+**uv 0.9.18 拒绝、0.13.0 接受** —— CI 与 pre-commit（0.13.0）因此全绿，只有本机 uv 偏旧的人
+在 `pnpm dev` 撞墙，而报错里一个字都不提 tombi。
+
+**修法**：`[tool.tombi.files] exclude = ["uv.lock"]`。实测 tombi 随即 `1 file skipped`，
+`uv lock --check` 在 0.9.18 / 0.13.0 上都 `Resolved 229 packages`；`pnpm dev` 三端
+（api :8088 / web :8888 / worker+beat）正常启动。
+
+⚠️ **`revision` 是内容驱动的**，不是「钉了 0.13 就该写 5」：把当前锁（3）手改成 5，
+uv 0.13.0 当场判 `The lockfile at uv.lock needs to be updated`；保持 3 两个版本都过。
+
 ## 用户批量导入
 
 通用导入框架的一个资源（框架见 [`backend/common/dataio` 分册](backend/common/dataio/AGENTS.md)），
