@@ -36,7 +36,10 @@ class OperaLog(DataClassBase):
     status: Mapped[int] = mapped_column(comment='操作状态（0异常 1正常）')
     code: Mapped[str] = mapped_column(UniversalStr(32), insert_default='200', comment='操作状态码')
     msg: Mapped[str | None] = mapped_column(UniversalText, comment='提示消息')
-    cost_time: Mapped[float] = mapped_column(insert_default=0.0, comment='请求耗时（ms）')
+    # 🔴 类型写死成 Float()：SQLAlchemy 2.1 起 `Mapped[float]` 的默认映射从 Float 改成了 Double，
+    # 而全站这几列都是历史迁移按 `sa.Float()` 建的 —— 不写死，`test_model_matches_migrations`
+    # 会在 SQL Server 上报「模型和迁移对不上」（FLOAT(53) → DOUBLE PRECISION），MySQL 上则是真的差一个类型
+    cost_time: Mapped[float] = mapped_column(sa.Float(), insert_default=0.0, comment='请求耗时（ms）')
     # index：清理任务按它做范围删除（`app/task/tasks/maintenance`），
     # 而日志表是全库长得最快的表 —— 没索引就是全表扫 + 锁升级 + 阻塞所有写日志的请求
     opera_time: Mapped[datetime] = mapped_column(TimeZone, index=True, comment='操作时间')

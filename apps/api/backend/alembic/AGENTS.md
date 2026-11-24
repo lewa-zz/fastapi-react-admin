@@ -98,6 +98,24 @@ v1.0.0 建库 → 升级 → 比对，`assert not [('add_column', None, 'sys_rol
 > 两个库都有 `alembic_version` 表、看起来都正常，所以没有任何现象。
 > 现在 env.py 改成「调用方设过就不覆盖」，`_stamp_head` 显式写目标库。
 
+### 🔴 `Mapped[float]` 的默认类型在 SQLAlchemy 2.1 变了 —— SQL Server 上会报「模型和迁移对不上」
+
+**症状**：CI 的 `pytest · SQL Server` 只红 `test_model_matches_migrations` 一条，差异是
+`open_api_log.cost_time` / `sys_opera_log.cost_time` 的 `FLOAT(precision=53)` → `DOUBLE PRECISION`。
+PostgreSQL job 是绿的，本地也复现不了 —— PG 上 `Float` 和 `Double` 都落成 `double precision`，比不出差别。
+
+**根因**：SQLAlchemy 2.1 起 `Mapped[float]` 的注解映射从 `Float` 改成了 `Double`。而这两列是历史迁移按
+`sa.Float()` 建的，模型一"翻译"成 Double，autogenerate 就看见一次类型变更。**MySQL 上这不是误报**：
+`Float` 落 `FLOAT`（4 字节）、`Double` 落 `DOUBLE`（8 字节），真按模型改是要重建列的。
+
+**修法**：模型里显式写 `mapped_column(sa.Float(), …)`，让注解回到库上的真实类型。**不要**为此改历史迁移
+（进过 tag 的不改），也**不要**去关 `env.py` 的 `compare_type` —— 那会把真正的漂移一起放过去。
+
+**实测证据**（2026-11-24，SQLAlchemy 2.1.9 / alembic 1.20.1）：`Mapped[float]` 的列类型是 `Double()`，
+写成 `mapped_column(sa.Float())` 是 `Float()`；mssql 方言分别编译成 `DOUBLE PRECISION` / `FLOAT`。
+CI run `45325030568` 的 SQL Server job 是 1 failed / 2064 passed（就是这一条），同一份代码的 PostgreSQL job 全绿；
+上一个 release（SQLAlchemy 2.0.52）的 CI 是绿的。
+
 ### 分叉了怎么接：没进 main 的那条改接到 head 后面，**revision ID 一起换**
 
 `test_single_head` 红的典型场景：两个分支各自从同一个 head 生了迁移（#119 的 AI 预审和 `k0000000openapp`

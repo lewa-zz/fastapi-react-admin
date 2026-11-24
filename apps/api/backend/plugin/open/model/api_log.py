@@ -52,7 +52,9 @@ class OpenApiLog(DataClassBase):
     )
     msg: Mapped[str | None] = mapped_column(UniversalText, comment='提示消息')
     row_count: Mapped[int | None] = mapped_column(comment='返回条数（同步类接口）')
-    cost_time: Mapped[float] = mapped_column(comment='请求耗时（ms）')
+    # 🔴 同 `sys_opera_log.cost_time`：SQLAlchemy 2.1 起 `Mapped[float]` 默认映射成 Double，
+    # 而这一列是迁移 `k0000000openapp` 按 `sa.Float()` 建的 —— 写死才能让迁移守卫在两个方言上都成立
+    cost_time: Mapped[float] = mapped_column(sa.Float(), comment='请求耗时（ms）')
     # index：列表按它排序筛选、清理任务按它做范围删除（同 sys_opera_log.opera_time）
     request_time: Mapped[datetime] = mapped_column(TimeZone, index=True, comment='调用时间')
     created_time: Mapped[datetime] = mapped_column(
