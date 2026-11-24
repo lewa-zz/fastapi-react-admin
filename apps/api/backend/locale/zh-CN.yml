@@ -162,6 +162,9 @@ error:
     import_row_key_missing: 这一行既没有 ID 也没有 TML 编号，无法判断是否已经导入过
     import_type_unknown: 类型「{value}」不存在，请先导入 WIR 类型
     type_source_id_conflict: 类型 ID={source_id} 已被「{type_cn}」占用，请换一个 ID 或留空
+  pm:
+    material_not_found: 材料 ID={pk} 不存在
+    source_id_exists: 来源 ID={source_id} 已存在
   notification:
     not_found: 通知不存在
     delivery_not_found: 投递记录不存在

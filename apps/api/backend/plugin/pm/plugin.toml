@@ -1,0 +1,14 @@
+[plugin]
+summary = "项目管理"
+version = "0.1.0"
+description = "BKK03 项目管理：材料主数据（后续指令/报价）"
+author = "rico"
+tags = ["other"]
+database = ["mysql", "postgresql", "sqlserver"]
+
+[app]
+extend = "admin"
+
+[api.pm]
+prefix = "/pm"
+tags = "项目管理"

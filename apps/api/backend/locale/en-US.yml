@@ -161,6 +161,9 @@ error:
     import_row_key_missing: This row has neither an ID nor a TML number, so we cannot tell whether it was already imported
     import_type_unknown: 'WIR type "{value}" does not exist; import the WIR types first'
     type_source_id_conflict: 'Type ID={source_id} is already used by "{type_cn}"; use another ID or leave it blank'
+  pm:
+    material_not_found: 'Material ID={pk} does not exist'
+    source_id_exists: 'Source ID={source_id} already exists'
   notification:
     not_found: Notification does not exist
     delivery_not_found: Delivery record does not exist
