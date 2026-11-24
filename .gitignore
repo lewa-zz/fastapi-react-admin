@@ -77,6 +77,16 @@ apps/desktop/resources/*
 # 公开上传子树（运行时数据，被 /uploads 静态挂出去）
 apps/api/backend/upload-public/
 
+# 本地 pnpm store。`.npmrc` 里没配 store-dir 时 pnpm 用全局 store，
+# 但一旦有人在仓库根 `pnpm config set store-dir .pnpm-store`（或环境变量
+# `PNPM_HOME` 误指），整份 CAS 就落在工作区里 —— 1GB+ 内容地址存储，
+# 文件名全是哈希，`git add .` 会把它们全吃进去。
+.pnpm-store/
+
+# 本地 Redis 快照。Redis 用 cwd 决定 dump 落点，从仓库根 `redis-server` 起过
+# 一次就会在根目录留下 dump.rdb —— 它曾经被 `git add .` 暂存进去过一次
+dump.rdb
+
 # Playwright（E2E）。⚠️ 路径不是 apps/web/e2e/test-results —— config 在
 # apps/web/e2e/playwright.config.ts，但 `pnpm --filter web e2e` 是从 apps/web/
 # 起（cwd=apps/web），Playwright 的默认 outputDir 跟着 cwd 走，实测落在
