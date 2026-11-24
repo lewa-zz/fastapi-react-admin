@@ -58,9 +58,10 @@ class PmMaterial(Base):
     id: Mapped[id_key] = mapped_column(init=False)
     #: Excel 的 `type` 列。`type` 是 Python 保留字，列名只能叫 `kind`。
     #: 值原样存（`PLC` / `Program（编程/软件）` / `Sensor（现场安装）`），实测最长 14
-    kind: Mapped[str] = mapped_column(UniversalStr(64), comment='类型（PLC / Program（编程/软件）…）')
+    kind: Mapped[str] = mapped_column(UniversalStr(64), index=True, comment='类型（PLC / Program（编程/软件）…）')
     category: Mapped[str] = mapped_column(UniversalStr(64), index=True, comment='类别（BMS控制柜 …）')
-    name_cn: Mapped[str] = mapped_column(UniversalStr(128), comment='材料中文名')
+    #: 列表页的 `kind` / `name_cn` 都是筛选/排序入参，卡片索引清单里点名要这两条单列索引
+    name_cn: Mapped[str] = mapped_column(UniversalStr(128), index=True, comment='材料中文名')
     name_en: Mapped[str] = mapped_column(UniversalStr(256), comment='材料英文名')
     unit: Mapped[str] = mapped_column(UniversalStr(32), comment='单位（台/件、套、米…）')
     #: 源 Excel 的 `id` 列（1..100）。导入幂等键：同一份材料表导入两次不重复。

@@ -4,7 +4,7 @@ Revision ID: edaef4a6e19f
 Revises: 4f7c2a91d3e8
 Create Date: 2026-11-24 18:37:41.647684+08:00
 
-PM 材料主数据（`pm_material`）+ 5 条菜单。
+PM 材料主数据（`pm_material`）+ 本插件自己的 5 条菜单（外加幂等补一条共用的顶层 `Project`）。
 
 菜单挂在**已存在的**顶层目录「项目管理」（`Project`，`/project`）下 —— 那条目录由
 WIR 插件的种子 / 迁移建的，两个插件共用。所以：
@@ -15,6 +15,14 @@ WIR 插件的种子 / 迁移建的，两个插件共用。所以：
 
 ⚠️ `source_id` 可空，SQL Server 的 UNIQUE 约束认为多个 NULL 彼此相等 —— 那里改用
 只对非 NULL 生效的筛选唯一索引（同 `plugin/wir` 的 `_TML_NO_UNIQUE`）。
+
+索引清单与模型的 `index=True` 一一对应（卡片点名的 `kind` / `category+active` /
+`name_cn` / `brand` + `active` / `category` 两条单列）：跑
+`alembic revision --autogenerate` 探针时它只吐出 `ix_pm_material_kind` /
+`ix_pm_material_name_cn` 两条（其余索引早已在模型里），说明**没有别的 autogenerate
+噪声**，就把那两行原样折进本文件，不额外叠一条迁移。
+
+`downgrade` 只删自己那 5 条菜单和 `pm_material`；`Project` 是 WIR 建的和本插件共用的。
 """
 
 import sqlalchemy as sa
@@ -126,18 +134,24 @@ def _create_table() -> None:
     op.create_index('ix_pm_material_category', 'pm_material', ['category'], unique=False)
     op.create_index('ix_pm_material_category_active', 'pm_material', ['category', 'active'], unique=False)
     op.create_index(op.f('ix_pm_material_id'), 'pm_material', ['id'], unique=True)
+    # 这两条是 autogenerate 探针原样吐出来的（见文件头），索引名走 naming_convention
+    op.create_index(op.f('ix_pm_material_kind'), 'pm_material', ['kind'], unique=False)
+    op.create_index(op.f('ix_pm_material_name_cn'), 'pm_material', ['name_cn'], unique=False)
 
 
 def _drop_table() -> None:
-    op.drop_index(op.f('ix_pm_material_id'), table_name='pm_material')
-    op.drop_index('ix_pm_material_category_active', table_name='pm_material')
-    op.drop_index('ix_pm_material_category', table_name='pm_material')
-    op.drop_index('ix_pm_material_brand', table_name='pm_material')
-    op.drop_index('ix_pm_material_active', table_name='pm_material')
-    if op.get_bind().dialect.name == 'mssql':
-        op.drop_index('uk_pm_material_source_id_deleted', table_name='pm_material')
-    else:
-        op.drop_constraint('uk_pm_material_source_id_deleted', 'pm_material', type_='unique')
+    """删表 —— 索引和唯一约束跟着表一起没
+
+    ⚠️ **不要照 autogenerate 的样式逐条 `drop_index` / `drop_constraint`**：表可能
+    不是这条迁移建的（开发环境的 lifespan 先跑过 `create_all`，那份索引清单是**当时
+    的模型**）—— 逐条删会 `index "ix_pm_material_category" does not exist` 把整条
+    `downgrade` 打回。三种方言的 `DROP TABLE` 都自带索引/约束清理。
+
+    实测（2026-11-24，PostgreSQL 16，本机 `fba` 库）：库里那张表是旧模型
+    `create_all` 建的（有 `ix_pm_material_kind` / `ix_pm_material_name_cn`，没有
+    `ix_pm_material_category`），逐条 drop 时报的就是上面那句，postgres 的事务化
+    DDL 把整条 downgrade 回滚成原样（菜单一条没删、表还在）。
+    """
     op.drop_table('pm_material')
 
 
