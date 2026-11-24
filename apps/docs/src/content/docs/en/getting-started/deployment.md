@@ -9,7 +9,7 @@ Production runs from Docker images that CI builds and pushes to GitHub Container
 
 ## What runs in production?
 
-`docker-compose.prod.yml` starts the API, a Celery worker, a separate Celery beat (scheduler) and the web container (nginx serving the built frontend and proxying the API). The database and Redis are yours — point `.env.server` at them.
+`docker-compose.prod.yml` starts the API, two Celery workers (`worker` for short tasks such as heartbeats and notification delivery, `worker-long` for long ones such as exports, AI pre-review and log pruning), a separate Celery beat (scheduler) and the web container (nginx serving the built frontend and proxying the API). The database and Redis are yours — point `.env.server` at them.
 
 :::caution
 In development the worker runs with an embedded beat (`celery worker -B`). Don't do that in production: with several replicas, every replica would run its own beat and each schedule would fire N times. Production runs exactly one beat container.
@@ -50,6 +50,8 @@ Back up the database before the first deployment against an existing one.
 - [ ] `CORS_ALLOWED_ORIGINS` is your real address; behind nginx or a load balancer, `TRUSTED_PROXIES` is set — otherwise rate limits and IP allow-lists see the proxy's address
 - [ ] If you enter secrets such as the SMTP authorization code in the UI, `CONFIG_ENCRYPT_SECRET_KEY` is set (generate with `python -c "import secrets;print(secrets.token_hex(32))"` and back it up) — without it saving them fails. **Upgrading from 1.1.0 with such values already in the database and no key stops the migration** — see [Upgrading from 1.1.0](/en/reference/upgrade/#upgrading-from-110-to-111-or-later)
 - [ ] If you use the AI assistant, object storage, group bots or the open platform, their encryption keys are set (`AI_ENCRYPT_SECRET_KEY`, `STORAGE_ENCRYPT_SECRET_KEY`, `NOTIFICATION_ENCRYPT_SECRET_KEY`, `OPEN_SECRET_KEY`) — without them saving those settings fails instead of storing plaintext
+- [ ] There are enough database connections: each process holds up to `DATABASE_POOL_SIZE + DATABASE_POOL_MAX_OVERFLOW` (10 + 20 by default). Multiplied by the api workers plus the celery worker processes, that must stay below the database's `max_connections`, or requests fail with `too many clients` at peak load. Check before adding workers; lower these two values or raise the database limit if needed
+- [ ] `DATA_CHANGE_CHAIN_KEY` is set (`python -c "import os;print(os.urandom(32).hex())"`) and kept apart from the database. It makes the data-change signature chain tamper-evident; left empty, anyone can recompute the signatures. **Don't change it once set**
 - [ ] `NOTIFICATION_WEB_BASE_URL` is your real address, or links in emails and group messages point at `localhost:8888`
 - [ ] The admin password is the strong one set during initialization, not the demo's `123456`
 - [ ] The database is backed up before the first deployment against it, and scheduled backups exist
@@ -75,11 +77,15 @@ TAG=sha-abc1234 bash prod.sh up
 
 ## What should external monitoring check?
 
-One URL: `https://<your-domain>/api/health/status`. It reports the API, database, Redis, scheduler (beat) and worker, and returns **200** only when all of them are healthy, **503** otherwise.
+One URL: `https://<your-domain>/api/health/status`. It reports the API, database, Redis, scheduler (beat), worker and long-task worker (`worker_long`), and returns **200** only when all of them are healthy, **503** otherwise.
 
 ```json
-{"status":"ok","services":{"api":{"status":"ok"},"database":{"status":"ok"},"redis":{"status":"ok"},"scheduler":{"status":"ok","last_seen_seconds":12},"worker":{"status":"ok","last_seen_seconds":31}},"heartbeat_max_age_seconds":180}
+{"status":"ok","services":{"api":{"status":"ok"},"database":{"status":"ok"},"redis":{"status":"ok"},"scheduler":{"status":"ok","last_seen_seconds":12},"worker":{"status":"ok","last_seen_seconds":31},"worker_long":{"status":"ok","last_seen_seconds":14}},"heartbeat_max_age_seconds":180}
 ```
+
+:::caution
+When upgrading from v1.1.3 or earlier, start the extra `worker-long` container (`bash prod.sh sync` brings in the new compose file). Without it, exports, AI pre-review and log pruning sit in their queue forever and `worker_long` reports `missing`.
+:::
 
 :::caution
 Don't monitor `/healthz`. It is nginx answering `200` by itself and stays green with the API and database down. For the same reason, probing a path that doesn't exist through the domain returns `200` and `index.html` (the frontend's history fallback) — check the body, not just the status.

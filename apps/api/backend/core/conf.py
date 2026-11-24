@@ -62,6 +62,16 @@ class Settings(BaseSettings):
     # 数据库
     DATABASE_ECHO: bool | Literal['debug'] = False
     DATABASE_POOL_ECHO: bool | Literal['debug'] = False
+    # 连接池，**每个进程一份**（每个 uvicorn worker、每个 celery worker 进程各自一个池）。
+    # 🔴 进程数 × (POOL_SIZE + POOL_MAX_OVERFLOW) 不能超过数据库的 max_connections，
+    # 否则高峰时报 `too many clients`、请求失败。实测：本机 Postgres 上限 100，8 个 worker × 30 就撞了
+    DATABASE_POOL_SIZE: int = Field(default=10, ge=1)
+    DATABASE_POOL_MAX_OVERFLOW: int = Field(default=20, ge=0)
+    # 借出连接前先探活。**默认关**（追求吞吐）：开着时每次借连接多三次往返（asyncpg 下 BEGIN + 空查询 + ROLLBACK），
+    # 实测关掉后每请求 CPU 少约 3%，见 middleware 分册「新中间件写成纯 ASGI」那一节。
+    # 代价（实测，数据库重启后并发 8 个请求）：关着时第一轮 1 个回 500，之后全部恢复 —— SQLAlchemy 撞上一次断连
+    # 就作废整个池；开着时 0 失败。数据库经常重启 / 切换、或者中间有掐空闲连接的防火墙时，设成 true
+    DATABASE_POOL_PRE_PING: bool = False
     DATABASE_SCHEMA: str = 'fba'
     DATABASE_CHARSET: str = 'utf8mb4'
     DATABASE_PK_MODE: Literal['autoincrement', 'snowflake'] = 'autoincrement'
@@ -88,6 +98,8 @@ class Settings(BaseSettings):
     CONFIG_ENCRYPT_SECRET_KEY: str = ''
     CACHE_DICT_REDIS_PREFIX: str = 'fba:cache:dict'
     CACHE_PUBSUB_CHANNEL: str = 'fba:cache:invalidate'
+    # 进程内全局数据集（菜单表这种全局、少变的数据，见 `common/cache/dataset.py`）的缓存键前缀
+    CACHE_DATASET_PREFIX: str = 'fba:dataset'
     CACHE_PUBSUB_RECONNECT_DELAY: int = 5  # 重连延迟（秒）
     CACHE_PUBSUB_MAX_RECONNECT_ATTEMPTS: int = 10  # 最大重连次数
 
@@ -587,6 +599,8 @@ class Settings(BaseSettings):
     # 阈值 = 3 个周期：漏一两拍（重启、发版换容器）不报警，连续三拍没有才判死
     SCHEDULER_HEARTBEAT_REDIS_KEY: str = 'fba:health:scheduler_heartbeat'
     WORKER_HEARTBEAT_REDIS_KEY: str = 'fba:health:worker_heartbeat'
+    #   worker_long —— 消费长任务队列的 worker 自己每 30 秒写（`app/task/celery.py: start_long_queue_heartbeat`，#400）
+    LONG_WORKER_HEARTBEAT_REDIS_KEY: str = 'fba:health:worker_long_heartbeat'
     HEARTBEAT_MAX_AGE_SECONDS: int = 180
 
     ##################################################
@@ -992,8 +1006,8 @@ def check_production_settings(s: Settings) -> None:
     ])
     if s.DEMO_MODE:
         problems.append('DEMO_MODE 在 prod 必须为 false')
-    if not s.LOGIN_CAPTCHA_ENABLED:
-        problems.append('LOGIN_CAPTCHA_ENABLED 在 prod 必须为 true')
+    # 验证码刻意**不在这里拦**（#410）：它在运行时以参数配置页为准，管理员可以随时开关，
+    # 启动检查只看 `.env` 的话拦了也是假象。开不开由部署方决定；登录爆破由下面的限流和账号 / IP 锁定兜着
     if not s.REQUEST_LIMITER_ENABLED:
         problems.append('REQUEST_LIMITER_ENABLED 在 prod 必须为 true —— 它是登录爆破的唯一一道闸')
     if s.USER_PASSWORD_MIN_LENGTH < 8:

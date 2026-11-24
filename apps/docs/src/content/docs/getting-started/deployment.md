@@ -9,7 +9,7 @@ sidebar:
 
 ## 生产环境跑了哪些服务
 
-`docker-compose.prod.yml` 启动 API、Celery worker、单独的 Celery beat（调度器）和 web 容器（nginx 托管前端产物并反代 API）。数据库和 Redis 用你自己的，在 `.env.server` 里指过去。
+`docker-compose.prod.yml` 启动 API、两个 Celery worker（`worker` 跑心跳、通知投递这类短任务，`worker-long` 跑导出、AI 预审、日志清理这类长任务）、单独的 Celery beat（调度器）和 web 容器（nginx 托管前端产物并反代 API）。数据库和 Redis 用你自己的，在 `.env.server` 里指过去。
 
 :::caution
 开发环境的 worker 内嵌了 beat（`celery worker -B`）。生产不能这么跑：多副本时每个副本都会起一个 beat，同一条定时任务会被触发 N 次。生产只跑一个 beat 容器。
@@ -53,6 +53,8 @@ bash prod.sh pull && bash prod.sh up
 - [ ] `CORS_ALLOWED_ORIGINS` 写成你真实的访问地址；前面有 nginx 或负载均衡时配好 `TRUSTED_PROXIES`，否则限流和 IP 白名单看到的都是代理的地址
 - [ ] 在界面上配 SMTP 授权码等参数密钥的，配好 `CONFIG_ENCRYPT_SECRET_KEY`（`python -c "import secrets;print(secrets.token_hex(32))"` 生成并备份）—— 没配时保存会报错；**从 1.1.0 升级、库里已有这类值时没配它，迁移会中止**，见[从 1.1.0 升级](/reference/upgrade/#从-110-升级到-111-及以后)
 - [ ] 用到 AI 助手、对象存储、群机器人、开放平台的，配好各自的加密密钥（`AI_ENCRYPT_SECRET_KEY`、`STORAGE_ENCRYPT_SECRET_KEY`、`NOTIFICATION_ENCRYPT_SECRET_KEY`、`OPEN_SECRET_KEY`）—— 没配时保存相应配置会直接报错，不会存明文
+- [ ] 数据库连接数够用：每个进程最多占 `DATABASE_POOL_SIZE + DATABASE_POOL_MAX_OVERFLOW`（默认 10 + 20）个连接，api 的 worker 数和 celery worker 进程数加起来乘上它，不能超过数据库的 `max_connections`，否则高峰期请求报 `too many clients` 失败。加 worker 前先算一下，不够就调小这两个值或调大数据库上限
+- [ ] 配好 `DATA_CHANGE_CHAIN_KEY`（`python -c "import os;print(os.urandom(32).hex())"`），并和数据库分开保管。数据变更记录的签名链靠它防篡改，留空时谁都能重算签名；**设了就别换**
 - [ ] `NOTIFICATION_WEB_BASE_URL` 改成真实地址，否则邮件和群消息里的链接指向 `localhost:8888`
 - [ ] 管理员密码是初始化时新设的强口令，没有沿用演示站的 `123456`
 - [ ] 第一次部署到已有数据库前做了备份；设好定时备份
@@ -78,11 +80,15 @@ TAG=sha-abc1234 bash prod.sh up
 
 ## 外部监控探哪个地址
 
-只探一个：`https://<你的域名>/api/health/status`。它列出 API、数据库、Redis、调度器（beat）和 worker 的状态，全部正常返回 **200**，任何一项异常返回 **503**。
+只探一个：`https://<你的域名>/api/health/status`。它列出 API、数据库、Redis、调度器（beat）、worker 和长任务 worker（`worker_long`）的状态，全部正常返回 **200**，任何一项异常返回 **503**。
 
 ```json
-{"status":"ok","services":{"api":{"status":"ok"},"database":{"status":"ok"},"redis":{"status":"ok"},"scheduler":{"status":"ok","last_seen_seconds":12},"worker":{"status":"ok","last_seen_seconds":31}},"heartbeat_max_age_seconds":180}
+{"status":"ok","services":{"api":{"status":"ok"},"database":{"status":"ok"},"redis":{"status":"ok"},"scheduler":{"status":"ok","last_seen_seconds":12},"worker":{"status":"ok","last_seen_seconds":31},"worker_long":{"status":"ok","last_seen_seconds":14}},"heartbeat_max_age_seconds":180}
 ```
+
+:::caution
+从 v1.1.3 及更早升级时要多起一个 `worker-long` 容器（`bash prod.sh sync` 换上新的 compose 就有）。没有它，导出、AI 预审、日志清理会一直排在队列里不执行，`worker_long` 那一项报 `missing`。
+:::
 
 :::caution
 不要拿 `/healthz` 做外部监控。它是 nginx 自己返回的 `200`，API 和数据库全挂了照样是绿的。同理，经域名访问一个不存在的路径会落到前端的 history fallback，返回 `200` 加 `index.html`——判断时要看响应内容，不能只看状态码。
