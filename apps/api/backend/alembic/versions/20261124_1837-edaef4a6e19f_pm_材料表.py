@@ -92,7 +92,13 @@ def _create_table() -> None:
         sa.Column('market_price', sa.Numeric(precision=14, scale=4), nullable=True, comment='市场价'),
         sa.Column('memo', backend.common.model.UniversalStr(length=256), nullable=True, comment='备注'),
         sa.Column('source', backend.common.model.UniversalStr(length=128), nullable=True, comment='来源'),
-        sa.Column('currency', backend.common.model.UniversalStr(length=8), nullable=False, comment='币种'),
+        sa.Column(
+            'currency',
+            backend.common.model.UniversalStr(length=8),
+            server_default='RMB',
+            nullable=False,
+            comment='币种',
+        ),
         sa.Column('active', sa.Boolean(), nullable=False, comment='是否启用（停用不出现在候选里）'),
         sa.Column('created_time', backend.common.model.TimeZone(timezone=True), nullable=False, comment='创建时间'),
         sa.Column('updated_time', backend.common.model.TimeZone(timezone=True), nullable=True, comment='更新时间'),
@@ -115,19 +121,19 @@ def _create_table() -> None:
         )
     else:
         op.create_unique_constraint('uk_pm_material_source_id_deleted', 'pm_material', ['source_id', 'deleted'])
+    op.create_index('ix_pm_material_active', 'pm_material', ['active'], unique=False)
     op.create_index('ix_pm_material_brand', 'pm_material', ['brand'], unique=False)
+    op.create_index('ix_pm_material_category', 'pm_material', ['category'], unique=False)
     op.create_index('ix_pm_material_category_active', 'pm_material', ['category', 'active'], unique=False)
     op.create_index(op.f('ix_pm_material_id'), 'pm_material', ['id'], unique=True)
-    op.create_index('ix_pm_material_kind', 'pm_material', ['kind'], unique=False)
-    op.create_index('ix_pm_material_name_cn', 'pm_material', ['name_cn'], unique=False)
 
 
 def _drop_table() -> None:
-    op.drop_index('ix_pm_material_name_cn', table_name='pm_material')
-    op.drop_index('ix_pm_material_kind', table_name='pm_material')
     op.drop_index(op.f('ix_pm_material_id'), table_name='pm_material')
     op.drop_index('ix_pm_material_category_active', table_name='pm_material')
+    op.drop_index('ix_pm_material_category', table_name='pm_material')
     op.drop_index('ix_pm_material_brand', table_name='pm_material')
+    op.drop_index('ix_pm_material_active', table_name='pm_material')
     if op.get_bind().dialect.name == 'mssql':
         op.drop_index('uk_pm_material_source_id_deleted', table_name='pm_material')
     else:

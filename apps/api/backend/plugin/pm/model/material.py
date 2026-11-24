@@ -47,10 +47,8 @@ class PmMaterial(Base):
     __tablename__ = 'pm_material'
     __table_args__ = (
         _SOURCE_ID_UNIQUE,
-        sa.Index('ix_pm_material_kind', 'kind'),
+        # 列表页常态是「按类别筛 + 只看启用」，单列索引加这条组合索引一起服务
         sa.Index('ix_pm_material_category_active', 'category', 'active'),
-        sa.Index('ix_pm_material_name_cn', 'name_cn'),
-        sa.Index('ix_pm_material_brand', 'brand'),
         {'comment': 'BKK03 材料主数据'},
     )
 
@@ -61,7 +59,7 @@ class PmMaterial(Base):
     #: Excel 的 `type` 列。`type` 是 Python 保留字，列名只能叫 `kind`。
     #: 值原样存（`PLC` / `Program（编程/软件）` / `Sensor（现场安装）`），实测最长 14
     kind: Mapped[str] = mapped_column(UniversalStr(64), comment='类型（PLC / Program（编程/软件）…）')
-    category: Mapped[str] = mapped_column(UniversalStr(64), comment='类别（BMS控制柜 …）')
+    category: Mapped[str] = mapped_column(UniversalStr(64), index=True, comment='类别（BMS控制柜 …）')
     name_cn: Mapped[str] = mapped_column(UniversalStr(128), comment='材料中文名')
     name_en: Mapped[str] = mapped_column(UniversalStr(256), comment='材料英文名')
     unit: Mapped[str] = mapped_column(UniversalStr(32), comment='单位（台/件、套、米…）')
@@ -70,7 +68,7 @@ class PmMaterial(Base):
     source_id: Mapped[int | None] = mapped_column(sa.BigInteger, default=None, comment='来源 Excel 行 ID（导入幂等键）')
     model: Mapped[str | None] = mapped_column(UniversalStr(64), default=None, comment='型号')
     spec: Mapped[str | None] = mapped_column(UniversalText, default=None, comment='规格描述（含换行）')
-    brand: Mapped[str | None] = mapped_column(UniversalStr(64), default=None, comment='品牌')
+    brand: Mapped[str | None] = mapped_column(UniversalStr(64), default=None, index=True, comment='品牌')
     qty: Mapped[Decimal | None] = mapped_column(sa.Numeric(14, 4), default=None, comment='合同数量')
     price: Mapped[Decimal | None] = mapped_column(sa.Numeric(14, 4), default=None, comment='合同单价')
     contract_price: Mapped[Decimal | None] = mapped_column(sa.Numeric(14, 4), default=None, comment='合同合价')
@@ -79,5 +77,5 @@ class PmMaterial(Base):
     market_price: Mapped[Decimal | None] = mapped_column(sa.Numeric(14, 4), default=None, comment='市场价')
     memo: Mapped[str | None] = mapped_column(UniversalStr(256), default=None, comment='备注')
     source: Mapped[str | None] = mapped_column(UniversalStr(128), default=None, comment='来源')
-    currency: Mapped[str] = mapped_column(UniversalStr(8), default='RMB', comment='币种')
-    active: Mapped[bool] = mapped_column(default=True, comment='是否启用（停用不出现在候选里）')
+    currency: Mapped[str] = mapped_column(UniversalStr(8), default='RMB', server_default='RMB', comment='币种')
+    active: Mapped[bool] = mapped_column(default=True, index=True, comment='是否启用（停用不出现在候选里）')
