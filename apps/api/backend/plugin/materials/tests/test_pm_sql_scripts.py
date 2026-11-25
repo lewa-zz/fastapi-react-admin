@@ -3,7 +3,7 @@
 盯的是两件「少一行 / 多一行都照样跑」的事：
 
 - **某个方言缺一份脚本。** `plugin/sql.py: get_plugin_sql()` 找不到文件就返回 `None` ——
-  `fba init` / `fba add pm` 不报错，只是那个库上**一条菜单都不建**，症状是侧边栏里
+  `fba init` / `fba add materials` 不报错，只是那个库上**一条菜单都不建**，症状是侧边栏里
   没有材料页。`plugin/validator.py` 会拦这种情况，但它只在**装插件**那一刻跑，
   `fba init` 的建库路径走不到它。
 - **卸载脚本里混进 `DELETE ... name = 'Project'`。** 顶层「项目管理」目录是 WIR 建的、
@@ -119,7 +119,7 @@ def test_init_seeds_the_same_five_menus_and_four_perms(dialect: str, kind: str) 
 def test_init_resolves_the_project_parent_instead_of_creating_it(dialect: str) -> None:
     """自增主键模式的那三份按 `name = 'Project'` 解析父级，**不 INSERT 它**
 
-    PM 是后装的那个插件：`fba add pm` 时顶层目录可能已经由 WIR 建好了。
+    PM 是后装的那个插件：`fba add materials` 时顶层目录可能已经由 WIR 建好了。
     再插一条 `Project` 的结果是侧边栏里出现两个「项目管理」。
     """
     body = _read(dialect, 'init.sql')
