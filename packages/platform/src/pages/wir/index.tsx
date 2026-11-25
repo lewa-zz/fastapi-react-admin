@@ -26,10 +26,11 @@ import { ConfirmDialog } from "../../shell/confirm-dialog"
 import { PageHeader } from "../../shell/page-header"
 import { ListBody, PageShell } from "../_shared/page-shell"
 import { BulkBar, RefreshButton, ResetButton } from "../_shared/filters"
+import { ExportButton } from "../_shared/data-io/export-button"
+import { ImportSheet } from "../_shared/data-io/import-sheet"
 import { listState } from "../_shared/list-query"
 import { DEFAULT_PAGE_SIZE } from "../_shared/pagination"
 import { useQuerySearch } from "../_shared/use-query-search"
-import { ImportSheet } from "../_shared/data-io/import-sheet"
 import {
   useDeleteWirRecords,
   wirKeys,
@@ -274,6 +275,14 @@ export function WirPage({
                   <IconUpload className="size-4" />
                   {t("导入台账")}
                 </Button>
+              </Can>
+              <Can perm="wir:export">
+                <ExportButton
+                  path="/api/v1/sys/wir/export"
+                  filters={q.params}
+                  selectedIds={selectedIds}
+                  total={total}
+                />
               </Can>
               <Can perm="wir:type:add">
                 <Button

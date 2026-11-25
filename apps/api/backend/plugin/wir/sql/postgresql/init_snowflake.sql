@@ -13,4 +13,5 @@ values
 (2049629108299000106, '新增类型', 'AddWirType', null, 4, null, 2, 'wir:type:add', 1, 0, '', null, 2049629108299000101, now(), null),
 (2049629108299000107, '修改类型', 'EditWirType', null, 5, null, 2, 'wir:type:edit', 1, 0, '', null, 2049629108299000101, now(), null),
 (2049629108299000108, '删除类型', 'DeleteWirType', null, 6, null, 2, 'wir:type:del', 1, 0, '', null, 2049629108299000101, now(), null),
-(2049629108299000109, '导入', 'ImportWir', null, 7, null, 2, 'wir:import', 1, 0, '', null, 2049629108299000101, now(), null);
+(2049629108299000109, '导入', 'ImportWir', null, 7, null, 2, 'wir:import', 1, 0, '', null, 2049629108299000101, now(), null),
+(2049629108299000111, '导出', 'ExportWirRecord', null, 8, null, 2, 'wir:export', 1, 0, '', null, 2049629108299000101, now(), null);

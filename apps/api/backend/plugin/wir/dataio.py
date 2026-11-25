@@ -1,4 +1,4 @@
-"""WIR 台账的导入定义。
+"""WIR 台账的导入 / 导出定义。
 
 源文件 `WIR Ledger_toDB.xlsx` 有两张表：`WIR`（289 行记录）和 `type`（36 个类型，
 `WIR.type_id` 指向 `type.id`）。所以这里登记两个资源：
@@ -11,17 +11,21 @@
 
 导入顺序：**先类型、后记录**。记录 import 的 `validate` 会明确报「类型不存在」，
 不会静默把 `type_id` 写成 NULL。
+
+导出（`WIR_RECORD_EXPORT`）只导记录这张表，列就是 `WIR_RECORD_IMPORT` 认得的那一套
+（外加 `id` / 创建 / 更新时间）—— 导出的文件改完能原样导回去。
 """
 
 from collections.abc import Mapping
 from typing import Any
 
-from pydantic import ValidationError
-from sqlalchemy import select
+from pydantic import ConfigDict, Field, ValidationError
+from sqlalchemy import Select, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.admin.service.import_service import pydantic_errors
+from backend.common.dataio.exporting import ExportColumn, ExportSpec, register_export
 from backend.common.dataio.importing import (
     CommitOutcome,
     ImportColumn,
@@ -33,6 +37,7 @@ from backend.common.dataio.importing import (
 from backend.common.exception import errors
 from backend.common.i18n import t
 from backend.common.log import log
+from backend.common.schema import SchemaBase
 from backend.plugin.wir.crud.crud_wir import wir_record_dao, wir_type_dao
 from backend.plugin.wir.model.wir import WirRecord, WirType
 from backend.plugin.wir.schema.wir import (
@@ -41,6 +46,7 @@ from backend.plugin.wir.schema.wir import (
     UpdateWirRecordParam,
     UpdateWirTypeParam,
 )
+from backend.utils.serializers import select_columns_serialize
 
 #: 一次 `IN (...)` 最多放多少个参数 —— SQL Server 一句最多 2100 个
 _CHUNK = 1000
@@ -78,6 +84,82 @@ def _fields(values: Mapping[str, Any], current: Any) -> dict[str, Any]:
             value = getattr(current, key)
         out[key] = value
     return out
+
+
+# ═══════════════════════════════ 导出 ═══════════════════════════════
+
+
+class WirRecordExportFilters(SchemaBase):
+    """和 `GET /sys/wir` 的查询参数同名同义（`dc` / `discipline` / `doc_status` / `type_id` / `search`）。
+
+    🔴 `extra='forbid'`：不认识的参数**报错**。忽略的话前端拼错一个参数名，那个条件就静默消失，
+    导出的是全表而用户以为是筛过的那批（同 `plugin/materials/dataio.py` 的 `MaterialExportFilters`）
+    """
+
+    model_config = ConfigDict(extra='forbid')
+
+    dc: str | None = Field(None, description='所属 DC')
+    discipline: str | None = Field(None, description='专业')
+    doc_status: str | None = Field(None, description='批复状态')
+    # 前端筛选值走 URL，是字符串；pydantic 的宽松模式会把 `'3'` 收成 `3`（类型 ID 只有 1..36）
+    type_id: int | None = Field(None, description='类型 ID')
+    search: str | None = Field(None, description='搜索（描述 / 别称 / 编号）')
+
+
+async def _record_select(f: WirRecordExportFilters, _user: Any) -> Select:
+    """复用列表接口那个 DAO 查询 —— 数据范围（虽已豁免）/ 排序都在它里面，不另写裸 select"""
+    return await wir_record_dao.get_select(
+        dc=f.dc, discipline=f.discipline, doc_status=f.doc_status, type_id=f.type_id, search=f.search
+    )
+
+
+async def _columns_only(_db: AsyncSession, rows: Any) -> list[dict[str, Any]]:  # ruff: ignore[unused-async]
+    """单表查询的行：`Row(WirRecord,)` → 列字典（`shape` 的签名是异步的）"""
+    return [select_columns_serialize(row[0]) for row in rows]
+
+
+WIR_RECORD_EXPORT = register_export(
+    ExportSpec(
+        resource='wir.record',
+        label='export.resource.wir_record',
+        perm='wir:export',
+        columns=(
+            ExportColumn('id', 'export.column.id', kind='id', width=22),
+            # 源 Excel 的 `ID`：导出的表改完能原样导回去（它就是记录导入的幂等键）
+            ExportColumn('source_id', 'export.column.wir_source_id', kind='int', width=10),
+            ExportColumn('from_party', 'export.column.wir_from_party', width=12),
+            ExportColumn('tml_no', 'export.column.wir_tml_no', width=30),
+            ExportColumn('pmweb_no', 'export.column.wir_pmweb_no', width=44),
+            ExportColumn('doc_type', 'export.column.wir_doc_type', width=12),
+            ExportColumn('discipline', 'export.column.wir_discipline', width=12),
+            ExportColumn('description', 'export.column.wir_description', width=50),
+            ExportColumn('drt_submitted', 'export.column.wir_drt_submitted', kind='datetime', width=18),
+            ExportColumn('pmx_submitted', 'export.column.wir_pmx_submitted', kind='datetime', width=18),
+            ExportColumn('cb_inspection', 'export.column.wir_cb_inspection', kind='datetime', width=18),
+            ExportColumn('doc_status', 'export.column.wir_doc_status', width=20),
+            ExportColumn('comment', 'export.column.wir_comment', width=50),
+            ExportColumn('another_desc', 'export.column.wir_another_desc', width=40),
+            ExportColumn('dc', 'export.column.wir_dc', width=14),
+            ExportColumn('filepath', 'export.column.wir_filepath', width=50),
+            ExportColumn('type_id', 'export.column.wir_type', kind='int', width=20),
+            ExportColumn('created_time', 'export.column.created_time', kind='datetime', width=20),
+            ExportColumn('updated_time', 'export.column.updated_time', kind='datetime', width=20),
+        ),
+        filters=WirRecordExportFilters,
+        # 🔴 表头直接复用 `export.column.wir_*`（导入那套），不另造一份同义的 `export.filter.*`：
+        # 两个语言包里已经逐字译好了，再加一遍就是两份会各自漂移的文案
+        filter_labels={
+            'dc': 'export.column.wir_dc',
+            'discipline': 'export.column.wir_discipline',
+            'doc_status': 'export.column.wir_doc_status',
+            'type_id': 'export.column.wir_type',
+            'search': 'export.filter.search',
+        },
+        select=_record_select,
+        id_column=WirRecord.id,
+        shape=_columns_only,
+    )
+)
 
 
 # ═══════════════════════════════ WIR 类型 ═══════════════════════════════

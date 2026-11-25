@@ -9,6 +9,8 @@ from backend.app.admin.schema.data_import import (
     ImportModeParam,
     ImportPreviewDetail,
 )
+from backend.app.admin.schema.export_job import GetExportJobDetail, StartExportParam
+from backend.app.admin.service.export_service import export_service
 from backend.app.admin.service.import_service import import_service
 from backend.common.pagination import DependsPagination, PageData
 from backend.common.response.response_schema import ResponseModel, ResponseSchemaModel, response_base
@@ -16,7 +18,7 @@ from backend.common.security.jwt import DependsJwtAuth
 from backend.common.security.permission import RequestPermission
 from backend.common.security.rbac import DependsRBAC
 from backend.database.db import CurrentSession, CurrentSessionTransaction
-from backend.plugin.wir.dataio import WIR_RECORD_IMPORT, WIR_TYPE_IMPORT
+from backend.plugin.wir.dataio import WIR_RECORD_EXPORT, WIR_RECORD_IMPORT, WIR_TYPE_IMPORT
 from backend.plugin.wir.schema.wir import (
     CreateWirRecordParam,
     CreateWirTypeParam,
@@ -114,6 +116,24 @@ async def commit_wir_import(
     data = await import_service.commit(
         db=db, spec=WIR_RECORD_IMPORT, user=request.user, obj=obj, background_tasks=background_tasks
     )
+    return response_base.success(data=data)
+
+
+# ── 导出 ────────────────────────────────────────────────────────────────────────────
+# ⚠️ 和 `/import/*` 一样必须在 `GET /{pk}` **之前**：`/export` 是一段路径，落在
+# `/{pk}` 后面就会被吞掉，报 `422 pk 不是合法整数`（看着像参数错了，查起来没方向）
+
+
+@router.post(
+    '/export',
+    summary='导出 WIR 台账',
+    dependencies=[Depends(RequestPermission('wir:export')), DependsRBAC],
+)
+async def export_wir_records(
+    request: Request, db: CurrentSession, obj: StartExportParam
+) -> ResponseSchemaModel[GetExportJobDetail]:
+    # 小批量当场生成完才返回（status=2，前端直接下载）；大批量返回排队（status=0），生成完发站内消息
+    data = await export_service.start(db=db, request=request, spec=WIR_RECORD_EXPORT, obj=obj)
     return response_base.success(data=data)
 
 

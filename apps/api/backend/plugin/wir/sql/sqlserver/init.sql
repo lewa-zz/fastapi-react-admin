@@ -36,3 +36,7 @@ FROM sys_menu WHERE name = 'PluginWir' AND deleted = 0;
 INSERT INTO sys_menu (title, name, path, sort, icon, type, perms, status, display, link, remark, parent_id, created_time, updated_time)
 SELECT N'导入', 'ImportWir', NULL, 7, NULL, 2, 'wir:import', 1, 0, '', NULL, id, GETDATE(), NULL
 FROM sys_menu WHERE name = 'PluginWir' AND deleted = 0;
+
+INSERT INTO sys_menu (title, name, path, sort, icon, type, perms, status, display, link, remark, parent_id, created_time, updated_time)
+SELECT N'导出', 'ExportWirRecord', NULL, 8, NULL, 2, 'wir:export', 1, 0, '', NULL, id, GETDATE(), NULL
+FROM sys_menu WHERE name = 'PluginWir' AND deleted = 0;

@@ -17,4 +17,5 @@ values
 ('新增类型', 'AddWirType', null, 4, null, 2, 'wir:type:add', 1, 0, '', null, @wir_menu_id, now(), null),
 ('修改类型', 'EditWirType', null, 5, null, 2, 'wir:type:edit', 1, 0, '', null, @wir_menu_id, now(), null),
 ('删除类型', 'DeleteWirType', null, 6, null, 2, 'wir:type:del', 1, 0, '', null, @wir_menu_id, now(), null),
-('导入', 'ImportWir', null, 7, null, 2, 'wir:import', 1, 0, '', null, @wir_menu_id, now(), null);
+('导入', 'ImportWir', null, 7, null, 2, 'wir:import', 1, 0, '', null, @wir_menu_id, now(), null),
+('导出', 'ExportWirRecord', null, 8, null, 2, 'wir:export', 1, 0, '', null, @wir_menu_id, now(), null);
