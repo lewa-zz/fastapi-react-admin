@@ -5,7 +5,7 @@
 1. **发起**（`start`，在请求里）：校验参数 → 按**当前用户的数据范围**数一遍 → 为空 / 超限直接拒 →
    落一条记录 → 行数不超过 `EXPORT_SYNC_MAX_ROWS` 就当场生成，否则交给 Celery
 2. **执行**（`execute`，请求里和 worker 里是同一份代码）：抢任务 → 以**发起人的身份**分批取数 →
-   边取边写临时文件 → 传到存储 → 记录改成完成 / 失败
+   边取边写临时文件 → 传到存储 → 记录改成完成 / 失败 → **给发起人发一条站内消息**（成功 / 失败都发）
 
 几条硬规矩，每条都对应一个不这么做就静默出错的后果：
 
@@ -17,6 +17,11 @@
   中间新进来的不算 —— 否则「超过上限就拒绝」只在发起那一刻成立
 - 🔴 **文件只有发起人能下载**，不进 `sys_file`（理由见 `model/export_job.py`）
 - **失败一律落成「失败 + 原因」**，不留在「生成中」：界面上永远转圈和「这个功能坏了」分不开（硬纪律 9）
+- 🔴 **通知只有 `execute()` 这一个发送点。** 小批量是请求里当场跑完、大批量在 worker 里跑，
+  `app/task/tasks/export/tasks.py` 那条 Celery 任务也调这里 —— 两条路都经过它，发一次就够。
+  两边都发的话，大批量的人会收到两条一模一样的消息（而两条都「看起来是对的」）
+- 🔴 **通知发不出去只记 warning，不影响导出结果**：消息是提醒，结果已经在导出记录里了；
+  notification 是插件，没装就静默跳过 —— 不让一个可选插件挡住导出本身
 """
 
 import contextlib
@@ -68,6 +73,9 @@ from backend.utils.timezone import timezone
 
 #: 文件名里不能出现的字符（Windows 最严）。资源名来自翻译文案，理论上干净，这里是第二道
 _FILENAME_ILLEGAL = re.compile(r'[\\/:*?"<>|\x00-\x1f]')
+
+#: 站内消息点开去哪：个人中心的「导出记录」面板
+EXPORTS_LINK = '/profile?section=exports'
 
 
 class ExportFailedError(Exception):
@@ -274,7 +282,52 @@ class ExportService:
                         await anyio.Path(tmp_path).unlink(missing_ok=True)
 
         async with async_db_session() as db:
-            return await export_job_dao.get(db, job_id)
+            job = await export_job_dao.get(db, job_id)
+        if job is None:
+            return None
+
+        # 🔴 完成通知发在这里，不在 Celery 任务里：`execute` 是「同步（小批量）」和
+        # 「异步（大批量）」唯一共同的完成出口，发在这里两条路各发一次、谁也漏不掉谁
+        await ExportService._notify(job)
+        return job
+
+    @staticmethod
+    async def _notify(job: ExportJob) -> None:
+        """给发起人发一条站内消息（成功 / 失败都发：失败也得让他知道，不然他会一直等）。
+
+        notification 是插件，没装就静默跳过 —— 不让一个可选插件挡住导出本身。
+        🔴 通知发不出去只记 warning：结果已经在导出记录里了，消息只是提醒。
+        """
+        try:
+            from backend.plugin.core import check_plugin_installed
+
+            if not check_plugin_installed('notification'):
+                return
+            from backend.plugin.notification.enums import NotificationCategory
+            from backend.plugin.notification.service.notification_service import notification_service
+
+            ok = job.status == ExportJobStatus.succeeded.value
+            with i18n.use_language(job.language):
+                if ok:
+                    title = t('export.notify.done_title', title=job.title)
+                    content = t('export.notify.done_content', rows=f'{job.row_count or 0:,}', file=job.file_name)
+                else:
+                    title = t('export.notify.failed_title', title=job.title)
+                    content = job.error or t('error.export.unexpected')
+            # 独立会话：execute 主流程的会话已经各自提交并关掉了，别把通知的和它们缠在一起
+            async with async_db_session() as db:
+                await notification_service.notify(
+                    db=db,
+                    user_id=job.created_by,
+                    title=title,
+                    content=content,
+                    link=EXPORTS_LINK,
+                    category=NotificationCategory.TASK,
+                    # 站内 + 按策略和本人偏好走邮件（#166）。投递在通知插件的 worker 里异步发，不拖这个任务
+                    kind='export.done' if ok else 'export.failed',
+                )
+        except Exception as e:
+            log.warning(f'导出 {job.id} 的完成通知没发出去（不影响结果）：{e!s}')
 
     @staticmethod
     async def _executor(user_id: int, spec: ExportSpec) -> Any:
