@@ -162,6 +162,8 @@ error:
     import_type_unknown: 'WIR type "{value}" does not exist; import the WIR types first'
     type_source_id_conflict: 'Type ID={source_id} is already used by "{type_cn}"; use another ID or leave it blank'
   pm:
+    import_bad_number: "{column}: {value} is not a valid number"
+    import_source_id_required: This row has no source ID (id column), so there is no material to update
     material_not_found: 'Material ID={pk} does not exist'
     source_id_exists: 'Source ID={source_id} already exists'
   notification:
@@ -452,12 +454,17 @@ export:
   list_separator: ", "
   column:
     action: Action
+    active: Active
+    brand: Brand
     browser: Browser
+    category: Category
     changes: Changes
     color: Color
     content_text: Content (plain text)
+    contract_price: Contract amount
     cost_ms: Duration (ms)
     created_time: Created at
+    currency: Currency
     dept_code: Department code
     dept_id: Department ID
     dept_name: Department name
@@ -467,10 +474,13 @@ export:
     dict_type_code: Dictionary type code
     dict_value: Value
     email: Email
+    id: ID
+    in_price: Inbound unit price
     ip: IP address
     is_staff: Admin access
     is_superuser: Superuser
     join_time: Joined at
+    kind: Type
     last_login_time: Last login
     leader_username: Leader username
     leader: Leader
@@ -478,8 +488,13 @@ export:
     login_account: Login account
     login_event: Event
     login_time: Login time
+    market_price: Market price
+    memo: Remark
     message: Message
     method: Method
+    model: Model
+    name_cn: Material name (CN)
+    name_en: Material name (EN)
     nickname: Nickname
     notice_id: Announcement ID
     notice_title: Title
@@ -491,10 +506,13 @@ export:
     opera_title: Operation
     operator: Operator
     os: OS
+    out_price: Outbound unit price
     parent_code: Parent department code
     parent_name: Parent department
     path: Endpoint
     phone: Phone
+    price: Contract unit price
+    qty: Contract quantity
     record_id: Record ID
     remark: Remark
     result: Result
@@ -502,11 +520,14 @@ export:
     role_names: Roles
     sort: Sort order
     source: Source
+    source_id: Source ID
     source_ref: Source reference
+    spec: Specification
     status: Status
     status_code: Status code
     time: Time
     trace_id: Trace ID
+    unit: Unit
     updated_time: Updated at
     user_id: User ID
     user_uuid: User UUID
@@ -535,6 +556,7 @@ export:
     end_time: Time to
     field: Field changed
     role: Role ID
+    search: Search
     start_time: Time from
   info:
     exported_at: Exported at
@@ -556,6 +578,7 @@ export:
     dept: Departments
     dict_data: Dictionary data
     login_log: Login logs
+    material: Materials
     notice: Announcements
     opera_log: Operation logs
     user: Users
@@ -593,6 +616,8 @@ import:
     dict_value: Required when creating. Leave blank when updating to keep the current value
     email: Optional. Must be globally unique
     leader: Optional. The leader's username (not the nickname)
+    material_number: Optional; money and quantity columns take plain numbers (no unit or currency symbols), at most 4 decimals
+    material_source_id: 'Optional but strongly recommended: the source material table''s id, used to tell whether this row has already been imported. Rows without it can only be created'
     nickname: Optional. Defaults to the username
     parent_code: Optional; leave blank for a top-level department. Can be an existing department or another row in the same file
     phone: Optional. 11-digit mobile number; format this column as text

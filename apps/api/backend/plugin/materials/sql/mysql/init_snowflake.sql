@@ -6,4 +6,6 @@ values
 (2049629108299000202, '查询', 'QueryPmMaterial', null, 0, null, 2, 'pm:material:list', 1, 0, '', null, 2049629108299000201, now(), null),
 (2049629108299000203, '新增', 'AddPmMaterial', null, 1, null, 2, 'pm:material:add', 1, 0, '', null, 2049629108299000201, now(), null),
 (2049629108299000204, '修改', 'EditPmMaterial', null, 2, null, 2, 'pm:material:edit', 1, 0, '', null, 2049629108299000201, now(), null),
-(2049629108299000205, '删除', 'DeletePmMaterial', null, 3, null, 2, 'pm:material:del', 1, 0, '', null, 2049629108299000201, now(), null);
+(2049629108299000205, '删除', 'DeletePmMaterial', null, 3, null, 2, 'pm:material:del', 1, 0, '', null, 2049629108299000201, now(), null),
+(2049629108299000206, '导入', 'ImportPmMaterial', null, 4, null, 2, 'pm:material:import', 1, 0, '', null, 2049629108299000201, now(), null),
+(2049629108299000207, '导出', 'ExportPmMaterial', null, 5, null, 2, 'pm:material:export', 1, 0, '', null, 2049629108299000201, now(), null);

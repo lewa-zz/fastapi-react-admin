@@ -163,6 +163,8 @@ error:
     import_type_unknown: 类型「{value}」不存在，请先导入 WIR 类型
     type_source_id_conflict: 类型 ID={source_id} 已被「{type_cn}」占用，请换一个 ID 或留空
   pm:
+    import_bad_number: "{column}：{value} 不是有效的数字"
+    import_source_id_required: 这一行没有来源 ID（id 列），无法判断要更新哪一条材料
     material_not_found: 材料 ID={pk} 不存在
     source_id_exists: 来源 ID={source_id} 已存在
   notification:
@@ -451,12 +453,17 @@ export:
   list_separator: "、"
   column:
     action: 动作
+    active: 是否启用
+    brand: 品牌
     browser: 浏览器
+    category: 类别
     changes: 改了什么
     color: 颜色
     content_text: 内容（纯文本）
+    contract_price: 合同合价
     cost_ms: 耗时（毫秒）
     created_time: 创建时间
+    currency: 币种
     dept_code: 部门编码
     dept_id: 部门 ID
     dept_name: 部门名称
@@ -466,10 +473,13 @@ export:
     dict_type_code: 字典类型编码
     dict_value: 键值
     email: 邮箱
+    id: ID
+    in_price: 报入单价
     ip: IP 地址
     is_staff: 后台管理
     is_superuser: 超级管理员
     join_time: 注册时间
+    kind: 类型
     last_login_time: 最近登录
     leader_username: 负责人用户名
     leader: 负责人
@@ -477,8 +487,13 @@ export:
     login_account: 登录账号
     login_event: 事件
     login_time: 登录时间
+    market_price: 市场价
+    memo: 备注
     message: 说明
     method: 请求方法
+    model: 型号
+    name_cn: 材料中文名
+    name_en: 材料英文名
     nickname: 昵称
     notice_id: 公告 ID
     notice_title: 标题
@@ -490,10 +505,13 @@ export:
     opera_title: 操作内容
     operator: 操作人
     os: 终端系统
+    out_price: 报出价
     parent_code: 上级部门编码
     parent_name: 上级部门
     path: 接口
     phone: 手机号
+    price: 合同单价
+    qty: 合同数量
     record_id: 记录 ID
     remark: 备注
     result: 结果
@@ -501,11 +519,14 @@ export:
     role_names: 角色
     sort: 排序
     source: 来源
+    source_id: 来源 ID
     source_ref: 来源引用
+    spec: 规格
     status: 状态
     status_code: 状态码
     time: 时间
     trace_id: Trace ID
+    unit: 单位
     updated_time: 更新时间
     user_id: 用户 ID
     user_uuid: 用户 UUID
@@ -534,6 +555,7 @@ export:
     end_time: 时间止
     field: 改过的字段
     role: 角色 ID
+    search: 搜索
     start_time: 时间起
   info:
     exported_at: 导出时间
@@ -555,6 +577,7 @@ export:
     dept: 部门列表
     dict_data: 字典数据
     login_log: 登录日志
+    material: 材料
     notice: 通知公告
     opera_log: 操作日志
     user: 用户列表
@@ -592,6 +615,8 @@ import:
     dict_value: 新建时必填；更新时留空表示不改
     email: 可选，全局唯一
     leader: 可选，负责人的用户名（不是昵称）
+    material_number: 可选，金额 / 数量列填数字（不要带单位或币种符号），最多 4 位小数
+    material_source_id: 可选但强烈建议保留：源材料表里的 id，用来判断「这一行是不是已经导入过」。没有它的行只能新增
     nickname: 可选，留空则与用户名相同
     parent_code: 可选，留空是顶级部门。可以填库里已有的部门，也可以填同一份文件里的另一行
     phone: 可选，11 位手机号。请把这一列设成「文本」格式

@@ -7,7 +7,7 @@ import {
   type RowSelectionState,
 } from "@tanstack/react-table"
 import { useQuery } from "@tanstack/react-query"
-import { IconPlus } from "@tabler/icons-react"
+import { IconPlus, IconUpload } from "@tabler/icons-react"
 
 import { Button } from "@admin/ui/components/button"
 import {
@@ -25,6 +25,8 @@ import { ConfirmDialog } from "../../shell/confirm-dialog"
 import { PageHeader } from "../../shell/page-header"
 import { ListBody, PageShell } from "../_shared/page-shell"
 import { BulkBar, RefreshButton, ResetButton } from "../_shared/filters"
+import { ExportButton } from "../_shared/data-io/export-button"
+import { ImportSheet } from "../_shared/data-io/import-sheet"
 import { listState } from "../_shared/list-query"
 import { DEFAULT_PAGE_SIZE } from "../_shared/pagination"
 import { useQuerySearch } from "../_shared/use-query-search"
@@ -170,6 +172,7 @@ export function MaterialPage({
     null
   )
   const [bulkOpen, setBulkOpen] = React.useState(false)
+  const [importOpen, setImportOpen] = React.useState(false)
   const del = useDeleteMaterials()
 
   const columns = React.useMemo(
@@ -233,6 +236,24 @@ export function MaterialPage({
                   {t("新增材料")}
                 </Button>
               </Can>
+              {/* 导入 / 导出：次要动作，outline —— 顺序照「主动作 → 次要 → 刷新 / 列」 */}
+              <Can perm="pm:material:import">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setImportOpen(true)}
+                >
+                  <IconUpload className="size-4" />
+                  {t("导入")}
+                </Button>
+              </Can>
+              <Can perm="pm:material:export">
+                <ExportButton
+                  path="/api/v1/sys/materials/export"
+                  filters={q.params}
+                  total={total}
+                />
+              </Can>
               <RefreshButton busy={isFetching} onClick={list.onRetry} />
               <DataTableColumnVisibility
                 table={table}
@@ -282,6 +303,20 @@ export function MaterialPage({
           />
         </div>
       </ListBody>
+
+      <ImportSheet
+        open={importOpen}
+        onOpenChange={setImportOpen}
+        base="/api/v1/sys/materials/import"
+        title={t("导入材料")}
+        description={t(
+          "直接导桌面那份材料表也行（sheet 名 Material）：表头按源文件认（type / mat_CN / amo…）。有来源 ID 的行按它更新，没有的只能新增。"
+        )}
+        modes={["create", "upsert", "update"]}
+        invalidate={materialsKeys.all}
+        previewKeys={["source_id", "kind", "name_cn", "unit", "price"]}
+        testId="materials-import-sheet"
+      />
 
       <MaterialFormSheet
         open={sheetOpen}

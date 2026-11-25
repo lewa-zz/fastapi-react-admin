@@ -1,4 +1,4 @@
-"""PM 插件的种子 / 卸载 SQL：12 份文件齐全、五条菜单、不碰共用的顶层目录。
+"""PM 插件的种子 / 卸载 SQL：12 份文件齐全、七条菜单、不碰共用的顶层目录。
 
 盯的是两件「少一行 / 多一行都照样跑」的事：
 
@@ -39,8 +39,17 @@ MENU_NAMES = (
     'AddPmMaterial',
     'EditPmMaterial',
     'DeletePmMaterial',
+    'ImportPmMaterial',
+    'ExportPmMaterial',
 )
-PERMS = ('pm:material:list', 'pm:material:add', 'pm:material:edit', 'pm:material:del')
+PERMS = (
+    'pm:material:list',
+    'pm:material:add',
+    'pm:material:edit',
+    'pm:material:del',
+    'pm:material:import',
+    'pm:material:export',
+)
 
 #: 材料的菜单 ID 区间（WIR 用到 `…000110`，PM 从 `…000201` 起，别撞）
 PM_MENU_ID_FLOOR = 2049629108299000201
@@ -71,7 +80,7 @@ def test_every_dialect_has_all_four_scripts(dialect: str) -> None:
 @pytest.mark.parametrize('dialect', DIALECTS)
 @pytest.mark.parametrize('kind', ('destroy.sql', 'destroy_snowflake.sql'))
 def test_destroy_never_touches_the_shared_project_menu(dialect: str, kind: str) -> None:
-    """卸载只删自己那 5 条 + `pm_material`
+    """卸载只删自己那 7 条 + `pm_material`
 
     `Project` 在这里**一个字符都不该出现** —— 连「先查一下再删」都不需要。
     出现即说明有人想动共用的顶层目录（WIR 台账也跟着没了）。
@@ -100,7 +109,7 @@ def test_destroy_drops_the_material_table(dialect: str, kind: str) -> None:
 
 @pytest.mark.parametrize('kind', ('init.sql', 'init_snowflake.sql'))
 @pytest.mark.parametrize('dialect', DIALECTS)
-def test_init_seeds_the_same_five_menus_and_four_perms(dialect: str, kind: str) -> None:
+def test_init_seeds_the_same_seven_menus_and_six_perms(dialect: str, kind: str) -> None:
     """三个方言语义必须一致 —— 缺一条就是那条菜单在某个库上不存在
 
     权限码也要齐：少一个的表现是「非超管点那个按钮永远 403」，
@@ -139,12 +148,12 @@ def test_snowflake_init_uses_fixed_ids_in_the_pm_range(dialect: str) -> None:
     """雪花模式的三份用同一套固定 ID（跨环境可复现），且挂对父子
 
     - ID 必须 ≥ `…000201`：WIR 已经用掉了 `…000101`–`…000110`
-    - 材料页挂 `Project`（`…000110`），四个按钮挂材料页（`…000201`）
+    - 材料页挂 `Project`（`…000110`），六个按钮挂材料页（`…000201`）
     """
     body = _read(dialect, 'init_snowflake.sql')
     ids = {int(value) for value in re.findall(r'\b(204962910829900020\d)\b', body)}
 
-    assert ids == {PM_MENU_ID_FLOOR + offset for offset in range(5)}, f'{dialect} 的固定 ID 集合不对：{sorted(ids)}'
+    assert ids == {PM_MENU_ID_FLOOR + offset for offset in range(7)}, f'{dialect} 的固定 ID 集合不对：{sorted(ids)}'
 
     page_line = next(line for line in body.splitlines() if "'PluginPmMaterial'" in line)
     assert PROJECT_MENU_ID in page_line, f'{dialect} 的材料页没挂在顶层目录 …000110 下：{page_line.strip()}'

@@ -14,7 +14,9 @@ begin
     ('查询', 'QueryPmMaterial', null, 0, null, 2, 'pm:material:list', 1, 0, '', null, pm_material_menu_id, now(), null),
     ('新增', 'AddPmMaterial', null, 1, null, 2, 'pm:material:add', 1, 0, '', null, pm_material_menu_id, now(), null),
     ('修改', 'EditPmMaterial', null, 2, null, 2, 'pm:material:edit', 1, 0, '', null, pm_material_menu_id, now(), null),
-    ('删除', 'DeletePmMaterial', null, 3, null, 2, 'pm:material:del', 1, 0, '', null, pm_material_menu_id, now(), null);
+    ('删除', 'DeletePmMaterial', null, 3, null, 2, 'pm:material:del', 1, 0, '', null, pm_material_menu_id, now(), null),
+    ('导入', 'ImportPmMaterial', null, 4, null, 2, 'pm:material:import', 1, 0, '', null, pm_material_menu_id, now(), null),
+    ('导出', 'ExportPmMaterial', null, 5, null, 2, 'pm:material:export', 1, 0, '', null, pm_material_menu_id, now(), null);
 end $$;
 
 select setval(pg_get_serial_sequence('sys_menu', 'id'), coalesce(max(id), 0) + 1, true) from sys_menu;
