@@ -64,10 +64,9 @@ _PATCHED_SESSION_MODULES = (
     'backend.plugin.open.service.api_log_service',
     'backend.plugin.open.service.webhook_delivery',
     'backend.plugin.open.service.webhook_service',
-    # 导出（#11）：执行在请求里和 worker 里是同一份代码，自己开会话（worker 里没有依赖注入）。
-    # ⚠️ Celery 任务（`app/task/tasks/export/tasks.py`）**不在**这份清单里：完成通知跟着
-    # `execute()` 走了，它自己现在一个会话都不开
+    # 导出（#11）：执行在请求里和 worker 里是同一份代码，自己开会话（worker 里没有依赖注入）
     'backend.app.admin.service.export_service',
+    'backend.app.task.tasks.export.tasks',
     # 短信发送（#153）：两段式日志必须自己开会话（放进请求会话里，外层回滚会把失败日志一起带走）
     'backend.plugin.sms.service.sms_service',
     # 公告的收件箱对时（#190：定时发布到点就发、过期就撤）：worker 里没有依赖注入，每条公告自己开一个事务
